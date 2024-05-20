@@ -15,6 +15,9 @@ $config = [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'Xr2lmhIFc7MjeeiBaksZQwL6377C99nD',
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ],
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -24,7 +27,8 @@ $config = [
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            // Set a custom error handler if not using site/error
+            'errorAction' => null,
         ],
         'mailer' => [
             'class' => \yii\symfonymailer\Mailer::class,
@@ -43,13 +47,15 @@ $config = [
         ],
         'db' => $db,
 
-        'urlManager' => ['enablePrettyUrl' => true,
-        'enableStrictParsing' => true,
-        'showScriptName' => false,
-        'rules' => [
-            'POST user/signup' => 'user/signup',
-            'POST user/login' => 'user/login',
-        ],
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'enableStrictParsing' => true,
+            'showScriptName' => false,
+            'rules' => [
+                'POST user/signup' => 'user/signup',
+                'POST user/login' => 'user/login',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+            ],
         ],
     ],
     'params' => $params,
@@ -68,7 +74,9 @@ if (YII_ENV_DEV) {
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        //'allowedIPs' => ['127.0.0.
+        // uncomment the following to add your IP if you are not connecting from localhost.
+        'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 }
 
