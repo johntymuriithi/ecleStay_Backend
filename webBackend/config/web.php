@@ -16,7 +16,7 @@ $config = [
 //            'class' => 'yii\web\Response',
 //            'on beforeSend' => function ($event) {
 //                $response = $event->sender;
-//                $response->headers->add('Access-Control-Allow-Origin', 'http://localhost:5173');
+//                $response->headers->add('Access-Control-Allow-Origin', 'http://localhost:5173/');
 //                $response->headers->add('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 //                $response->headers->add('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 //            },

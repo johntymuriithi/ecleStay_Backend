@@ -12,6 +12,27 @@ class UserController extends ActiveController
 {
     public $modelClass = 'app\models\User'; // specifies the model this controller will use
 
+    public function behaviors() {
+        return [
+            'corsFilter' => [
+                'class' => \yii\filters\Cors::className(),
+                'cors' => [
+                    // restrict access to
+                    'Origin' => (YII_ENV_PROD) ? [''] : ['http://localhost:5174'], // look at this
+                    // Allow only POST and PUT methods
+                    'Access-Control-Request-Method' => ['GET', 'HEAD', 'POST', 'PUT'],
+                    // Allow only headers 'X-Wsse'
+                    'Access-Control-Request-Headers' => ['X-Wsse', 'Content-Type'],
+                    // Allow credentials (cookies, authorization headers, etc.) to be exposed to the browser
+                    'Access-Control-Allow-Credentials' => true,
+                    // Allow OPTIONS caching
+                    'Access-Control-Max-Age' => 3600,
+                    // Allow the X-Pagination-Current-Page header to be exposed to the browser.
+                    'Access-Control-Expose-Headers' => ['X-Pagination-Current-Page'],
+                ],
+            ],
+        ];
+    }
     public function actions() // modifies the default actions defined by the ActiveController class
     {
         $actions = parent::actions(); // gets the default actions
