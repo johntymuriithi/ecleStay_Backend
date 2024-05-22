@@ -39,15 +39,17 @@ $config = [
         ],
         'mailer' => [
             'class' => 'yii\symfonymailer\Mailer',
-            'useFileTransport' => false,
             'transport' => [
-                'class' => 'Swift_SmtpTransport',
+                'scheme' => 'smtp',
                 'host' => 'smtp-relay.brevo.com',
-                'port' => 587,
                 'username' => '75362d001@smtp-brevo.com',
-                'password' => 'YOUR_SMTP_KEY', // Replace with your actual SMTP key
+                'password' => '2hM3OLNErSp15RJT',
+                'port' => 587,
+                'encryption' => 'tls',
             ],
+            'useFileTransport' => false,
         ],
+
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [

@@ -12,17 +12,18 @@ class UserController extends ActiveController
 {
     public $modelClass = 'app\models\User'; // specifies the model this controller will use
 
+    // i have the CROS origin issues here
     public function behaviors() {
         return [
             'corsFilter' => [
                 'class' => \yii\filters\Cors::className(),
                 'cors' => [
                     // restrict access to
-                    'Origin' => (YII_ENV_PROD) ? [''] : ['http://localhost:5173'], '*', // look at this
+                    'Origin' => (YII_ENV_PROD) ? [''] : '*', // look at this
                     // Allow only POST and PUT methods
                     'Access-Control-Request-Method' => ['GET', 'HEAD', 'POST', 'PUT'],
                     // Allow only headers 'X-Wsse'
-                    'Access-Control-Request-Headers' => ['X-Wsse', 'Content-Type'],
+                    'Access-Control-Request-Headers' => ['X-Wsse', 'Content-Type'], '*',
                     // Allow credentials (cookies, authorization headers, etc.) to be exposed to the browser
                     'Access-Control-Allow-Credentials' => true,
                     // Allow OPTIONS caching
@@ -52,7 +53,6 @@ class UserController extends ActiveController
                 return ['status' => false, 'message' => "Field '$field' is required"];
             }
         }
-
         $user = new User();
         $user->first_name = $params['first_name'];
         $user->second_name = $params['second_name'];
@@ -65,14 +65,14 @@ class UserController extends ActiveController
         $phone = User::findOne(['phone' => $params['phone']]);
 //        var_dump($availableUser);
         if ($user->save()) {
-            // send email here
-            Yii::$app->mailer->compose('welcome', ['user' => $user])
-                ->setFrom('no-reply@example.com')
+            // send email here ,,,I may have thought of building a helper function but if it works, well you no the answer
+            Yii::$app->mailer->compose()
+                ->setFrom('ecleStay-no-reply@gmail.com')
                 ->setTo($user->email)
-                ->setSubject('Welcome to our application')
+                ->setSubject('Welcome to ecleStay')
+                ->setHtmlBody("<p>Hello {$user->first_name},</p><p>Welcome to <h1>EcliStay</h1>!</p><p>Thank you for signing up.</p>")
                 ->send();
-
-            return ['status' => true, 'message' => 'User created successfully'];
+            return ['status' => 200, 'message' => 'User created successfully'];
         } elseif ($availableUser != null) {
             return ['status' => 409, 'message' => 'Email already exist ', 'user' => $user];
         }elseif ($phone != null) {
@@ -89,7 +89,7 @@ class UserController extends ActiveController
         $user = User::findOne(['email' => $params['email']]);
 
     if ($user && Yii::$app->security->validatePassword($params['password'], $user->password_hash)) {
-        return ['status' => true, 'message' => 'Login successful', 'user' => $user];
+        return ['status' => 200, 'message' => 'Login successful', 'user' => $user];
     } else {
         throw new BadRequestHttpException('Invalid email or password');
     }
