@@ -38,10 +38,15 @@ $config = [
             'errorAction' => null,
         ],
         'mailer' => [
-            'class' => \yii\symfonymailer\Mailer::class,
-            'viewPath' => '@app/mail',
-            // send all mails to a file by default.
-            'useFileTransport' => true,
+            'class' => 'yii\symfonymailer\Mailer',
+            'useFileTransport' => false,
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp-relay.brevo.com',
+                'port' => 587,
+                'username' => '75362d001@smtp-brevo.com',
+                'password' => 'YOUR_SMTP_KEY', // Replace with your actual SMTP key
+            ],
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,

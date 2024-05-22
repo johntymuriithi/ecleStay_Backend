@@ -18,7 +18,7 @@ class UserController extends ActiveController
                 'class' => \yii\filters\Cors::className(),
                 'cors' => [
                     // restrict access to
-                    'Origin' => (YII_ENV_PROD) ? [''] : ['http://localhost:5174'], // look at this
+                    'Origin' => (YII_ENV_PROD) ? [''] : ['http://localhost:5173'], '*', // look at this
                     // Allow only POST and PUT methods
                     'Access-Control-Request-Method' => ['GET', 'HEAD', 'POST', 'PUT'],
                     // Allow only headers 'X-Wsse'
@@ -65,6 +65,13 @@ class UserController extends ActiveController
         $phone = User::findOne(['phone' => $params['phone']]);
 //        var_dump($availableUser);
         if ($user->save()) {
+            // send email here
+            Yii::$app->mailer->compose('welcome', ['user' => $user])
+                ->setFrom('no-reply@example.com')
+                ->setTo($user->email)
+                ->setSubject('Welcome to our application')
+                ->send();
+
             return ['status' => true, 'message' => 'User created successfully'];
         } elseif ($availableUser != null) {
             return ['status' => 409, 'message' => 'Email already exist ', 'user' => $user];
