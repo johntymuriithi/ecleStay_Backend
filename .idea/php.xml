@@ -99,6 +99,7 @@
       <path value="$PROJECT_DIR$/webBackend/vendor/codeception/codeception" />
       <path value="$PROJECT_DIR$/webBackend/vendor/cebe/markdown" />
       <path value="$PROJECT_DIR$/webBackend/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/webBackend/vendor/firebase/php-jwt" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />
