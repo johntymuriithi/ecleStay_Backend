@@ -102,13 +102,16 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $key = Yii::$app->params['jwtSecretKey'];
         $payload = [
-            'iss' => 'http://localhost:8080',
-            'aud' => 'http://localhost:3000',
+//            'iss' => 'http://localhost:8080',
+//            'aud' => 'http://localhost:3000',
             'iat' => time(),
             'nbf' => time(),
             'exp' => time() + 3600,
             'data' => [
-                'userId' => $this->id,
+                'sub' => $this->id,
+                'first name' => $this->first_name,
+                'second name' => $this->second_name,
+                'phone number' => $this->phone,
                 'email' => $this->email,
             ],
         ];
@@ -116,15 +119,14 @@ class User extends ActiveRecord implements IdentityInterface
         $token = JWT::encode($payload, $key, 'HS256');
 
         // Store the token in the database
-        $userToken = new UserTokens();
-        $userToken->jwt_id = $this->id;
-        $userToken->jwt_token = $token;
-        $userToken->created_at = date('Y-m-d H:i:s', $payload['exp']);
-        $userToken->expires_at = date('Y-m-d H:i:s', $payload['exp']);
-        $userToken->save();
-
-        var_dump($userToken->save());
-
+//        $userToken = new UserTokens();
+//        $userToken->jwt_id = $this->id;
+//        $userToken->jwt_token = $token;
+//        $userToken->created_at = date('Y-m-d H:i:s', $payload['exp']);
+//        $userToken->expires_at = date('Y-m-d H:i:s', $payload['exp']);
+//        $userToken->save();
+//
+//        var_dump($userToken->save());
         return $token;
     }
 
@@ -134,14 +136,19 @@ class User extends ActiveRecord implements IdentityInterface
         try {
             $decoded = JWT::decode($token, new Key($key, 'HS256'));
             // Check if the token exists in the database and has not expired
-            $userToken = UserTokens::find()->where(['token' => $token])->one();
-            if ($userToken && strtotime($userToken->expires_at) > time()) {
-                return $decoded;
-            }
-            return false;
+//            $userToken = UserTokens::find()->where(['token' => $token])->one();
+//            if ($userToken && strtotime($userToken->expires_at) > time()) {
+//                return $decoded;
+//            }
+            return $decoded;
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    public function generateActivationToken()
+    {
+        $this->activationToken = Yii::$app->security->generateRandomString() . '_' . time();
     }
 }
 
