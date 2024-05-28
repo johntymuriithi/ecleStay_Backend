@@ -16,34 +16,70 @@ use yii\web\ServerErrorHttpException;
 use yii\web\UnauthorizedHttpException;
 use app\models\PasswordResetToken;
 use yii\filters;
-use app\components\JwtMiddleware;
+//use app\components\JwtMiddleware;
+//use app\components\BaseController;
 
-class UserController extends ActiveController
+class UserController extends BaseController
 {
     public $modelClass = 'app\models\User'; // specifies the model this controller will use
 
-    public function behaviors() {
-
-        return [
-            'corsFilter' => [
-                'class' => \yii\filters\Cors::className(),
-                'cors' => [
-                    // restrict access to
-                    'Origin' => (YII_ENV_PROD) ? [''] : ['http://localhost:5177'], ['https://fe59-41-90-101-26.ngrok-free.app/'], '*', // look at this
-                    // Allow only POST and PUT methods
-                    'Access-Control-Request-Method' => ['GET', 'HEAD', 'POST', 'PUT'],
-                    // Allow only headers 'X-Wsse'
-                    'Access-Control-Request-Headers' => ['X-Wsse', 'Content-Type'], '*',
-                    // Allow credentials (cookies, authorization headers, etc.) to be exposed to the browser
-                    'Access-Control-Allow-Credentials' => true,
-                    // Allow OPTIONS caching
-                    'Access-Control-Max-Age' => 3600,
-                    // Allow the X-Pagination-Current-Page header to be exposed to the browser.
-                    'Access-Control-Expose-Headers' => ['X-Pagination-Current-Page'],
-                ],
-            ],
-        ];
-    }
+//    public function behaviors()
+//    {
+//        $behaviors = parent::behaviors();
+//
+//        // Enable JSON output
+//        $behaviors['contentNegotiator'] = [
+//            'class' => \yii\filters\ContentNegotiator::class,
+//            'formats' => [
+//                'application/json' => Response::FORMAT_JSON,
+//            ],
+//        ];
+//
+//        // Add CORS filter
+//        $behaviors['corsFilter'] = [
+//            'class' => \yii\filters\Cors::className(),
+//            'cors' => [
+//                'Origin' => (YII_ENV_PROD) ? [''] : ['http://localhost:5177', 'https://fe59-41-90-101-26.ngrok-free.app', '*'],
+//                'Access-Control-Request-Method' => ['GET', 'HEAD', 'POST', 'PUT'],
+//                'Access-Control-Request-Headers' => ['X-Wsse', 'Content-Type', '*'],
+//                'Access-Control-Allow-Credentials' => true,
+//                'Access-Control-Max-Age' => 3600,
+//                'Access-Control-Expose-Headers' => ['X-Pagination-Current-Page'],
+//            ],
+//        ];
+//
+//        return $behaviors;
+//    }
+//
+//    public function actions()
+//    {
+//        $actions = parent::actions();
+//        // Disable default actions if needed
+//        unset($actions['create'], $actions['update'], $actions['delete'], $actions['view']);
+//        return $actions;
+//    }
+//    public function behaviors() {
+//
+//        return [
+//            'corsFilter' => [
+//                'class' => \yii\filters\Cors::className(),
+//                'cors' => [
+//                    // restrict access to
+//                    'Origin' => (YII_ENV_PROD) ? [''] : ['http://localhost:5177'], ['https://fe59-41-90-101-26.ngrok-free.app/'], '*', // look at this
+//                    // Allow only POST and PUT methods
+//                    'Access-Control-Request-Method' => ['GET', 'HEAD', 'POST', 'PUT'],
+//                    // Allow only headers 'X-Wsse'
+//                    'Access-Control-Request-Headers' => ['X-Wsse', 'Content-Type'], '*',
+//                    // Allow credentials (cookies, authorization headers, etc.) to be exposed to the browser
+//                    'Access-Control-Allow-Credentials' => true,
+//                    // Allow OPTIONS caching
+//                    'Access-Control-Max-Age' => 3600,
+//                    // Allow the X-Pagination-Current-Page header to be exposed to the browser.
+//                    'Access-Control-Expose-Headers' => ['X-Pagination-Current-Page'],
+//                ],
+//            ],
+//        ];
+//    }
     // i have the CROS origin issues here
 //    public function behaviors() {
 //        $behaviors = parent::behaviors();
@@ -123,12 +159,12 @@ class UserController extends ActiveController
 //            ]
 //        ];
 //    }
-    public function actions() // modifies the default actions defined by the ActiveController class
-    {
-        $actions = parent::actions(); // gets the default actions
-        unset($actions['create'], $actions['update'], $actions['delete']);
-        return $actions;
-    }
+//    public function actions() // modifies the default actions defined by the ActiveController class
+//    {
+//        $actions = parent::actions(); // gets the default actions
+//        unset($actions['create'], $actions['update'], $actions['delete']);
+//        return $actions;
+//    }
 
     public function actionSignup()
     {

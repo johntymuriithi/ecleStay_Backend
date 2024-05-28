@@ -68,6 +68,8 @@ $config = [
             'rules' => [
                 'POST user/signup' => 'user/signup',
                 'POST user/login' => 'user/login',
+                'GET counties' => 'county/showcounties',
+                'POST add/county' => 'county/addcounty',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
             ],
         ],
