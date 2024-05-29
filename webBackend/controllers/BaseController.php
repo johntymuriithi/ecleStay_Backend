@@ -23,7 +23,7 @@ class BaseController extends ActiveController
         $behaviors['corsFilter'] = [
             'class' => \yii\filters\Cors::className(),
             'cors' => [
-                'Origin' => (YII_ENV_PROD) ? [''] : ['http://localhost:5174'], '*',
+                'Origin' => (YII_ENV_PROD) ? [''] : ['*'],
                 'Access-Control-Request-Method' => ['GET', 'HEAD', 'POST', 'PUT'],
                 'Access-Control-Request-Headers' => ['X-Wsse', 'Content-Type', '*'],
                 'Access-Control-Allow-Credentials' => true,

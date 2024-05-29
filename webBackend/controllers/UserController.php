@@ -7,6 +7,7 @@ use yii\base\Security;
 use yii\filters\AccessControl;
 use yii\rest\ActiveController;
 use app\models\User;
+use yii\web\ConflictHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
@@ -201,9 +202,9 @@ class UserController extends BaseController
                 ->send();
             return ['status' => 200];
         } elseif ($availableUser != null) {
-            return ['status' => 401, 'message' => 'Email already exist '];
+            throw new ConflictHttpException("User with the same Email Exists");
         }elseif ($phone != null) {
-            return ['status' => 405, 'message' => 'phone already exist '];
+            throw new ConflictHttpException("User with the same Number Exists");
         } else{
             return ['status' => false, 'errors' => $user->errors];
         }
@@ -307,8 +308,8 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
             $user->activationToken = null; // Clear the token after activation
             if ($user->save()) {
                 // Redirect to frontend login page
-//                return "Ok";
-                return $this->redirect('https://fe59-41-90-101-26.ngrok-free.app');
+                return "Activated successfully, Waiting for frontend guys now";
+//                return $this->redirect('https://fe59-41-90-101-26.ngrok-free.app');
             } else {
                 throw new BadRequestHttpException("Activation Failed");
             }
