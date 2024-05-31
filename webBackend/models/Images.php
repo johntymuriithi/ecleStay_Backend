@@ -1,4 +1,5 @@
 <?php
+
 namespace app\models;
 
 use yii\db\ActiveRecord;
@@ -13,13 +14,15 @@ class Images extends ActiveRecord {
     {
         return [
             [['service_id', 'image_url'], 'required'],
+            [['service_id'], 'integer'],
             [['image_url'], 'string', 'max' => 200],
-            [['service_id'], 'integer']
         ];
     }
 
-//    public function getServices() {
-//        $this->hasMany(Services::class, ['type_id', 'type_id']);
-//    }
+    public function getService()
+    {
+        return $this->hasOne(Services::class, ['service_id' => 'service_id']);
+    }
 }
+
 ?>

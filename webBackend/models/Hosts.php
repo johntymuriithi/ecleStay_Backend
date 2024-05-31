@@ -26,24 +26,29 @@ class Hosts extends ActiveRecord
             [['email'], 'email'],
         ];
     }
-
-    public function attributeLabels()
-    {
-        return [
-            'host_id' => 'Host ID',
-            'about' => 'About',
-            'host_name' => 'Host Name',
-            'language' => 'Language',
-            'email' => 'Email',
-            'number' => 'Number',
-            'picture' => 'Picture',
-            'county_id' => 'County',
-            'approved' => 'Approved',
-        ];
-    }
+//
+//    public function attributeLabels()
+//    {
+//        return [
+//            'host_id' => 'Host ID',
+//            'about' => 'About',
+//            'host_name' => 'Host Name',
+//            'language' => 'Language',
+//            'email' => 'Email',
+//            'number' => 'Number',
+//            'picture' => 'Picture',
+//            'county_id' => 'County',
+//            'approved' => 'Approved',
+//        ];
+//    }
 
     public function getServices()
     {
         return $this->hasMany(Services::class, ['host_id' => 'host_id']);
     }
+
+//    public function getTypes()
+//    {
+//        return $this->hasMany(Types::class, ['host_id' => 'hosts_id']);
+//    }
 }

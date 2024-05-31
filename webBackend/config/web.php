@@ -75,6 +75,15 @@ $config = [
                 'GET show/hosts' => 'hosts/showhosts',
                 'POST add/host' => 'hosts/addhosts',
                 'POST add/service' => 'services/addservice',
+
+                'GET show/categories' => 'categories/showcategories',
+                'POST add/category' => 'categories/addcategory',
+
+                'GET show/accommodations' => 'categories/getaccommodations',
+                'GET searchBy/service' => 'categories/searchtype',
+
+                'GET show/services' => 'services/getservices',
+                'GET view/service' => 'services/viewservice',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
             ],
         ],

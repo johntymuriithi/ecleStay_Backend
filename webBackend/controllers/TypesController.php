@@ -30,14 +30,12 @@ class TypesController extends BaseController
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
         $params = \Yii::$app->request->bodyParams;
-
         $type = new Types();
-        $type->type_name = $params['type_name'];
 
-        if ($type->save()) {
+        if ($type->load($params, '') && $type->save()) {
             return "Type Added Successfully";
         } else {
-            throw new ForbiddenHttpException("Well,,you are forbidden boohoo");
+            throw new ForbiddenHttpException("You are very much Forbidden from this Action");
         }
 
     }
