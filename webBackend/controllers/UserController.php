@@ -198,7 +198,7 @@ class UserController extends BaseController
                 ->setSubject('Welcome to ecleStay')
                 ->setHtmlBody("<p>Welcome {$user->first_name} {$user->second_name}, to <h1>EcliStay</h1></p>
 <p>Please click below Button to activate your account</p>
-<a href='https://e3b9-41-90-101-26.ngrok-free.app/user/activateuser?token={$user->activationToken}'>Activate Account</a>")
+<a href='http://localhost:8080/user/activateuser?token={$user->activationToken}'>Activate Account</a>")
                 ->send();
             return ['status' => 200];
         } elseif ($availableUser != null) {
@@ -238,7 +238,7 @@ class UserController extends BaseController
         if ($user) {
             $userId = $user->id;
             $token = Yii::$app->security->generateRandomString(64);
-            $expireDate = time() + 200000;
+            $expireDate = time() + 200;
             if (PasswordResetToken::createToken($userId, $token, $expireDate)) {
                 // Send the token to the user via email
                 $resetLink = Yii::$app->urlManager->createAbsoluteUrl(['user/resetpassword', 'token' => $token]);
@@ -251,7 +251,7 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
 <p>Please do ignore this Link if you didn't request it, Thank You</p>")
                     ->send();
 
-                return ["Status" => '200 OK'];
+                return ["Status" => '200 OK', "resentLink" => $token];
             } else {
                 throw new \RuntimeException('Failed to create password reset token.');
             }
@@ -262,11 +262,13 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
 
     public function actionResetpassword($token)
     {
-        var_dump($token);
         Yii::$app->response->format = Response::FORMAT_JSON;
         $userParams = Yii::$app->request->bodyParams;
         $hashedTokenFromUser = hash('sha256', $token);
         $user = User::findOne(['email' => $userParams['email']]);
+        if (!$user) {
+            throw new NotFoundHttpException("Email not found / user not does not exists");
+        }
         $userId = $user->id;
         $userRows = PasswordResetToken::findAll(['user_id' => $userId]);
 
@@ -282,11 +284,10 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
             foreach ($userRows as $row) {
                 $row->delete();
             }
-//            return $this->redirect('https://fe59-41-90-101-26.ngrok-free.app'); // direct to login page
+            return ["status" => 200, "message" => "Reset Successful, Continue with $newPassword as you password"];
         } else {
             throw new NotAcceptableHttpException("Not acceptable,, Sorry");
         }
-        return ["Do it again"];
     }
 
     // don'$this->do thos in production please this is for testing only

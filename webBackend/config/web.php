@@ -82,6 +82,9 @@ $config = [
                 'GET show/accommodations' => 'categories/getaccommodations',
                 'GET searchBy/service' => 'categories/searchtype',
 
+                'GET show/roles' => 'roles/showroles',
+                'POST add/role' => 'roles/addrole',
+
                 'GET show/services' => 'services/getservices',
                 'GET view/service' => 'services/viewservice',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',

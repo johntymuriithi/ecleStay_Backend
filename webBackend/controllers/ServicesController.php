@@ -64,7 +64,7 @@ class ServicesController extends BaseController
 
         // Find the service by ID, including related images and county
         $service = Services::find()
-            ->with('images', 'county', 'hosts')
+            ->with('images', 'county', 'hosts', 'roles')
             ->where(['service_id' => $id])
             ->asArray() // Convert the result to an array
             ->one();
