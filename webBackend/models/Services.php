@@ -15,7 +15,7 @@ class Services extends ActiveRecord
     public function rules()
     {
         return [
-            [['price', 'pricing_criteria', 'description', 'type_id', 'host_id', 'start_date', 'end_date', 'county_id'], 'required'],
+            [['price', 'pricing_criteria', 'description', 'type_id', 'host_id', 'start_date', 'end_date', 'county_id', 'service_name', 'bedroom', 'cancellation_policy', 'bath', 'guests', 'beds'], 'required'],
             [['price', 'host_id', 'type_id', 'county_id'], 'integer'],
             [['pricing_criteria'], 'string', 'max' => 50],
             [['description'], 'string', 'max' => 500],
@@ -75,6 +75,9 @@ class Services extends ActiveRecord
             return $this->roles;
         };
 
+        $fields['amenities'] = function () {
+            return $this->amenities;
+        };
         return $fields;
     }
 }

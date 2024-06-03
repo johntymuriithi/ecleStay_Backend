@@ -68,6 +68,7 @@ $config = [
             'rules' => [
                 'POST user/signup' => 'user/signup',
                 'POST user/login' => 'user/login',
+                'GET users/total' => 'user/userstotal',
                 'GET counties' => 'county/showcounties',
                 'POST add/county' => 'county/addcounty',
                 'GET types' => 'types/showtypes',
@@ -85,8 +86,15 @@ $config = [
                 'GET show/roles' => 'roles/showroles',
                 'POST add/role' => 'roles/addrole',
 
+                'GET show/amenity' => 'roles/showamenities',
+
                 'GET show/services' => 'services/getservices',
                 'GET view/service' => 'services/viewservice',
+
+                'GET get/orders' => 'orders/showorders',
+                'POST place/order' => 'orders/ordernow',
+
+
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
             ],
         ],

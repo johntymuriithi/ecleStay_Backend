@@ -27,19 +27,19 @@ class RolesController extends BaseController
         }
     }
 
-    public function actionAddrole()
-    {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-        $params = \Yii::$app->request->bodyParams;
-        $role = new Roles();
-
-        if ($role->load($params, '') && $role->save()) {
-            return "Role Added Successfully";
-        } else {
-            throw new ForbiddenHttpException("You are very much Forbidden from this Action");
-        }
-
-    }
+//    public function actionAddrole()
+//    {
+//        Yii::$app->response->format = Response::FORMAT_JSON;
+//        $params = \Yii::$app->request->bodyParams;
+//        $role = new Roles();
+//
+//        if ($role->load($params, '') && $role->save()) {
+//            return "Role Added Successfully";
+//        } else {
+//            throw new ForbiddenHttpException("You are very much Forbidden from this Action");
+//        }
+//
+//    }
 }
 
 ?>

@@ -319,5 +319,15 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
         }
     }
 
+
+    // get the number of registered users in our website
+
+    public function actionUserstotal() {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $total = User::find()->count();
+
+        return ["users" => $total];
+    }
+
 }
 ?>
