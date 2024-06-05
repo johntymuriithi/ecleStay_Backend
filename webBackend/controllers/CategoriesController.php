@@ -50,6 +50,8 @@ class CategoriesController extends BaseController
 
     public function actionGetaccommodations($categoryName) {
         // Find the category by name
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
         $category = Categories::find()->where(['category_name' => $categoryName])->one();
         if (!$category) {
             throw new NotFoundHttpException("Category not found");

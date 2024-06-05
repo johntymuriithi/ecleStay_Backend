@@ -22,14 +22,13 @@ class BaseController extends ActiveController
         // Add CORS filter
         $behaviors['corsFilter'] = [
             'class' => \yii\filters\Cors::className(),
-            'cors' => [
-                'Origin' => (YII_ENV_PROD) ? [''] : ['*'],
+            'cors' => ['Origin' => ['*'], // Replace with your frontend URL'Access-Control-Request-Method' => ['GET', POST', 'PUT', 'DELETE'],
+            'Access-Control-Allow-Credentials' => true,
                 'Access-Control-Request-Method' => ['GET', 'HEAD', 'POST', 'PUT'],
-                'Access-Control-Request-Headers' => ['X-Wsse', 'Content-Type', '*'],
-                'Access-Control-Allow-Credentials' => true,
-                'Access-Control-Max-Age' => 3600,
-                'Access-Control-Expose-Headers' => ['X-Pagination-Current-Page'],
-            ],
+            'Access-Control-Max-Age' => 3600, // Allow OPTIONS caching
+            'Access-Control-Request-Headers' => ['*'],
+            'Access-Control-Allow-Headers' => ['Content-Type' => 'application/json', 'Authorization'],
+        ],
         ];
 
         return $behaviors;

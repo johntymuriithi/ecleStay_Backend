@@ -12,15 +12,11 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+            'db' => 'db'
+        ],
         'request' => [
-//            'class' => 'yii\web\Response',
-//            'on beforeSend' => function ($event) {
-//                $response = $event->sender;
-//                $response->headers->add('Access-Control-Allow-Origin', 'http://localhost:5173/');
-//                $response->headers->add('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-//                $response->headers->add('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-//            },
-            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'Xr2lmhIFc7MjeeiBaksZQwL6377C99nD',
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser',
@@ -65,6 +61,7 @@ $config = [
             'enablePrettyUrl' => true,
             'enableStrictParsing' => true,
             'showScriptName' => false,
+            'hostInfo' => 'https://dcf6-41-90-101-26.ngrok-free.app',
             'rules' => [
                 'POST user/signup' => 'user/signup',
                 'POST user/login' => 'user/login',

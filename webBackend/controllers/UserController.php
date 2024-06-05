@@ -191,6 +191,9 @@ class UserController extends BaseController
         $availableUser = User::findOne(['email' => $params['email']]);
         $phone = User::findOne(['phone' => $params['phone']]);
         if ($user->save()) {
+            $user->blocked = false;
+            $user->login_trials = 0;
+            $user->save();
             $tokenJWT = $user->generateJwt();
             Yii::$app->mailer->compose()
                 ->setFrom('ecleStay-no-reply@gmail.com')
@@ -217,15 +220,33 @@ class UserController extends BaseController
         if (!$user) {
             throw new NotFoundHttpException("User does not exists");
         } else {
-            if ($user->userActive === true) {
-                if ($user && Yii::$app->security->validatePassword($params['password'], $user->password_hash)) {
-                    $tokenJWTs = $user->generateJwt();
-                    return ['status' => 200, 'token' => $tokenJWTs];
+            if (!$user->blocked){
+                if ($user->userActive === true) {
+                    if ($user && Yii::$app->security->validatePassword($params['password'], $user->password_hash)) {
+                        $tokenJWTs = $user->generateJwt();
+                        return ['status' => 200, 'token' => $tokenJWTs];
+                    } else {
+                        $trials = $user->login_trials;
+                        $user->login_trials = $trials + 1;
+                        $user->save();
+
+                        if ($user->login_trials >= 3) {
+                            $user->blocked = true;
+                            $user->save();
+                            throw new ForbiddenHttpException("User Blocked");
+                        }
+                        throw new BadRequestHttpException('Invalid password');
+                    }
                 } else {
-                    throw new BadRequestHttpException('Invalid email or password');
+                    throw new UnauthorizedHttpException("Please Active your account using the email sent to YOU!");
                 }
             } else {
-                throw new UnauthorizedHttpException("Please Active your account using the email sent to YOU!");
+                Yii::$app->response->statusCode = 403;
+                return [
+                    'status' => 403,
+                    'message' => 'User is temporarily blocked, please reset your password to continue',
+                ];
+                // frontend to redirect to reset password thingy
             }
         }
     }
@@ -238,10 +259,10 @@ class UserController extends BaseController
         if ($user) {
             $userId = $user->id;
             $token = Yii::$app->security->generateRandomString(64);
-            $expireDate = time() + 200;
+            $expireDate = time() + 120;
             if (PasswordResetToken::createToken($userId, $token, $expireDate)) {
                 // Send the token to the user via email
-                $resetLink = Yii::$app->urlManager->createAbsoluteUrl(['user/resetpassword', 'token' => $token]);
+                $resetLink = Yii::$app->urlManager->createAbsoluteUrl(['resetpasswordlink', 'token' => $token]);
                 Yii::$app->mailer->compose()
                     ->setFrom('ecleStay-password-reset@gmail.com')
                     ->setTo($user->email)
@@ -251,7 +272,7 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
 <p>Please do ignore this Link if you didn't request it, Thank You</p>")
                     ->send();
 
-                return ["Status" => '200 OK', "resentLink" => $token];
+                return ["Status" => '200 OK', "resentLink" => $resetLink, "token" => $token];
             } else {
                 throw new \RuntimeException('Failed to create password reset token.');
             }
@@ -267,26 +288,36 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
         $hashedTokenFromUser = hash('sha256', $token);
         $user = User::findOne(['email' => $userParams['email']]);
         if (!$user) {
-            throw new NotFoundHttpException("Email not found / user not does not exists");
+            throw new NotFoundHttpException("Email user does not exist");
         }
         $userId = $user->id;
         $userRows = PasswordResetToken::findAll(['user_id' => $userId]);
-
+        $validToken = null;
         foreach ($userRows as $idToken) {
-            if ($idToken->token === $hashedTokenFromUser && $idToken->token_expiry < time()) {
-                throw new BadRequestHttpException("Link has expired");
+            if ($idToken->token === $hashedTokenFromUser && $idToken->token_expiry > time()) {
+                $validToken = $idToken;
+                break;
             }
         }
-        $newPassword = $userParams['password'];
-        $newPasswordHashed = Yii::$app->security->generatePasswordHash($newPassword);
-        $user->password_hash = $newPasswordHashed;
-        if ($user->save()) {
-            foreach ($userRows as $row) {
-                $row->delete();
+        if ($validToken) {
+            $newPassword = $userParams['password'];
+            $newPasswordHashed = Yii::$app->security->generatePasswordHash($newPassword);
+            $user->password_hash = $newPasswordHashed;
+
+            if ($user->blocked === true) {
+                $user->blocked = false;
+                $user->login_trials = 0;
             }
-            return ["status" => 200, "message" => "Reset Successful, Continue with $newPassword as you password"];
+            if ($user->save()) {
+                foreach ($userRows as $row) {
+                    $row->delete();
+                }
+                return ["status" => 200, "message" => "Reset Successful, Continue with $newPassword as your password"];
+            } else {
+                throw new NotAcceptableHttpException("Not acceptable, Sorry");
+            }
         } else {
-            throw new NotAcceptableHttpException("Not acceptable,, Sorry");
+            throw new NotFoundHttpException("Invalid or expired token");
         }
     }
 
