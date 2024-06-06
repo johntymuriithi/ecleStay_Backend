@@ -1,6 +1,7 @@
 <?php
 namespace app\controllers;
 
+use app\components\JwtAuth;
 use Yii;
 use yii\rest\ActiveController;
 use app\models\County;
@@ -12,10 +13,28 @@ class CountyController extends BaseController
 {
     public $modelClass = 'app\models\County'; // Specifies the model this controller will use
 
+//    public function behaviors()
+//    {
+//        $behaviors = parent::behaviors();
+//
+//        // Add JWT authenticator
+//        $behaviors['authenticator'] = [
+//            'class' => JwtAuth::class,
+//        ];
+//
+//        return $behaviors;
+//    }
+
     public function actionShowcounties()
     {
-        $counties = County::find()->all();
-        return $counties;
+//        if (Yii::$app->user->can('uploadService')) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $counties = County::find()->all();
+
+            return $counties;
+//        } else {
+//            throw new ForbiddenHttpException("You are restricted from this action / endpoint");
+//        }
     }
 
     public function actionAddcounty()

@@ -14,7 +14,16 @@ $config = [
     'components' => [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
-            'db' => 'db'
+            'defaultRoles' => ['guest'],
+        ],
+        'response' => [
+            // ...
+            'on beforeSend' => function ($event) {
+                $response = $event->sender;
+                $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:5173');
+                $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); // Allow all common HTTP methods
+                $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow 'Content-Type' and 'Authorization' headers
+            },
         ],
         'request' => [
             'cookieValidationKey' => 'Xr2lmhIFc7MjeeiBaksZQwL6377C99nD',
@@ -61,7 +70,7 @@ $config = [
             'enablePrettyUrl' => true,
             'enableStrictParsing' => true,
             'showScriptName' => false,
-            'hostInfo' => 'https://dcf6-41-90-101-26.ngrok-free.app',
+            'hostInfo' => 'https://dcf6-41-90-101-26.ngrok-free.app', // very important
             'rules' => [
                 'POST user/signup' => 'user/signup',
                 'POST user/login' => 'user/login',

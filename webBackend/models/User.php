@@ -63,8 +63,23 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        $decoded = static::validateJwt($token);
+        if ($decoded) {
+            return static::findOne(['id' => $decoded->data->sub]);
+        }
+        return null;
     }
+
+//    /**
+//     * Finds an identity by the given token.
+//     * @param string $token the token to be looked for
+//     * @param mixed $type the type of the token. The value of this parameter depends on the implementation.
+//     * @return IdentityInterface|null the identity object that matches the given token.
+//     */
+//    public static function findIdentityByAccessToken($token, $type = null)
+//    {
+//        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+//    }
 
     /**
      * Returns an ID that can uniquely identify a user identity.
@@ -145,6 +160,7 @@ class User extends ActiveRecord implements IdentityInterface
             return false;
         }
     }
+
 
     public function generateActivationToken()
     {

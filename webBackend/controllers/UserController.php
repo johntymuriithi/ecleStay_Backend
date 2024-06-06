@@ -22,7 +22,7 @@ use yii\filters;
 
 class UserController extends BaseController
 {
-    public $modelClass = 'app\models\User'; // specifies the model this controller will use
+    public $modelClass = 'app\models\User';// specifies the model this controller will use
 
 //    public function behaviors()
 //    {
@@ -224,7 +224,11 @@ class UserController extends BaseController
                 if ($user->userActive === true) {
                     if ($user && Yii::$app->security->validatePassword($params['password'], $user->password_hash)) {
                         $tokenJWTs = $user->generateJwt();
-                        return ['status' => 200, 'token' => $tokenJWTs];
+                        $user->blocked = false;
+                        $user->login_trials = 0;
+                        $user->save();
+
+                        return ['status' => 200, 'data' => ['token' => $tokenJWTs], 'Message' => 'Logged in Successfully'];
                     } else {
                         $trials = $user->login_trials;
                         $user->login_trials = $trials + 1;
@@ -307,6 +311,7 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
             if ($user->blocked === true) {
                 $user->blocked = false;
                 $user->login_trials = 0;
+                $user->save();
             }
             if ($user->save()) {
                 foreach ($userRows as $row) {
@@ -320,6 +325,7 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
             throw new NotFoundHttpException("Invalid or expired token");
         }
     }
+
 
     // don'$this->do thos in production please this is for testing only
     public function actionToa()

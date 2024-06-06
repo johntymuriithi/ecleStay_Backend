@@ -1,29 +1,32 @@
 <?php
+//// your-project-directory/components/JwtAuth.php
 //
 //namespace app\components;
 //
+//use yii\filters\auth\AuthMethod;
 //use Yii;
-//use yii\base\ActionFilter;
 //use yii\web\UnauthorizedHttpException;
-//use app\models\User;
 //
-//class JwtMiddleware extends ActionFilter
+//class JwtAuth extends AuthMethod
 //{
-//    public function beforeAction($action)
+//    public function authenticate($user, $request, $response)
 //    {
-//        $headers = Yii::$app->request->headers;
-//        $authHeader = $headers->get('Authorization');
-//
-//        var_dump($authHeader);
-//
-//        if ($authHeader && preg_match('/^Bearer\s+(.*?)$/', $authHeader, $matches)) {
-//            $token = $matches[1];
-//            if ($decoded = User::validateJwt($token)) {
-//                return parent::beforeAction($action);
+//        $authHeader = $request->getHeaders()->get('Authorization');
+//        if ($authHeader !== null && preg_match('/^Bearer\s+(.*?)$/', $authHeader, $matches)) {
+//            $identity = $user->loginByAccessToken($matches[1], get_class($this));
+//            if ($identity === null) {
+//                $this->handleFailure($response);
 //            }
+//            return $identity;
 //        }
-//        throw new UnauthorizedHttpException('Your request was made with invalid credentials.');
+//        return null;
+//    }
+//
+//    public function handleFailure($response)
+//    {
+//        throw new UnauthorizedHttpException('Your request was made with invalid credentials');
 //    }
 //}
+//
 //
 //?>
