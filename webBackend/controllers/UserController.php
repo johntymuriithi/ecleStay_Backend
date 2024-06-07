@@ -24,149 +24,6 @@ class UserController extends BaseController
 {
     public $modelClass = 'app\models\User';// specifies the model this controller will use
 
-//    public function behaviors()
-//    {
-//        $behaviors = parent::behaviors();
-//
-//        // Enable JSON output
-//        $behaviors['contentNegotiator'] = [
-//            'class' => \yii\filters\ContentNegotiator::class,
-//            'formats' => [
-//                'application/json' => Response::FORMAT_JSON,
-//            ],
-//        ];
-//
-//        // Add CORS filter
-//        $behaviors['corsFilter'] = [
-//            'class' => \yii\filters\Cors::className(),
-//            'cors' => [
-//                'Origin' => (YII_ENV_PROD) ? [''] : ['http://localhost:5177', 'https://fe59-41-90-101-26.ngrok-free.app', '*'],
-//                'Access-Control-Request-Method' => ['GET', 'HEAD', 'POST', 'PUT'],
-//                'Access-Control-Request-Headers' => ['X-Wsse', 'Content-Type', '*'],
-//                'Access-Control-Allow-Credentials' => true,
-//                'Access-Control-Max-Age' => 3600,
-//                'Access-Control-Expose-Headers' => ['X-Pagination-Current-Page'],
-//            ],
-//        ];
-//
-//        return $behaviors;
-//    }
-//
-//    public function actions()
-//    {
-//        $actions = parent::actions();
-//        // Disable default actions if needed
-//        unset($actions['create'], $actions['update'], $actions['delete'], $actions['view']);
-//        return $actions;
-//    }
-//    public function behaviors() {
-//
-//        return [
-//            'corsFilter' => [
-//                'class' => \yii\filters\Cors::className(),
-//                'cors' => [
-//                    // restrict access to
-//                    'Origin' => (YII_ENV_PROD) ? [''] : ['http://localhost:5177'], ['https://fe59-41-90-101-26.ngrok-free.app/'], '*', // look at this
-//                    // Allow only POST and PUT methods
-//                    'Access-Control-Request-Method' => ['GET', 'HEAD', 'POST', 'PUT'],
-//                    // Allow only headers 'X-Wsse'
-//                    'Access-Control-Request-Headers' => ['X-Wsse', 'Content-Type'], '*',
-//                    // Allow credentials (cookies, authorization headers, etc.) to be exposed to the browser
-//                    'Access-Control-Allow-Credentials' => true,
-//                    // Allow OPTIONS caching
-//                    'Access-Control-Max-Age' => 3600,
-//                    // Allow the X-Pagination-Current-Page header to be exposed to the browser.
-//                    'Access-Control-Expose-Headers' => ['X-Pagination-Current-Page'],
-//                ],
-//            ],
-//        ];
-//    }
-    // i have the CROS origin issues here
-//    public function behaviors() {
-//        $behaviors = parent::behaviors();
-//
-//        $behaviors['jwtAuth'] = [
-//            'class' => JwtMiddleware::className(),
-//            'except' => ['login', 'signup', 'resetpasswordlink'], // Exclude login and signup actions from JWT auth
-//        ];
-
-//        $behaviors['corsFilter'] = [
-//            'class' => \yii\filters\Cors::className(),
-//            'cors' => [
-//                // restrict access to
-//                'Origin' => (YII_ENV_PROD) ? [''] : ['http://localhost:5173'], '*', // look at this
-//                // Allow only POST and PUT methods
-//                'Access-Control-Request-Method' => ['GET', 'HEAD', 'POST', 'PUT'],
-//                // Allow only headers 'X-Wsse'
-//                'Access-Control-Request-Headers' => ['X-Wsse', 'Content-Type'], '*',
-//                // Allow credentials (cookies, authorization headers, etc.) to be exposed to the browser
-//                'Access-Control-Allow-Credentials' => true,
-//                // Allow OPTIONS caching
-//                'Access-Control-Max-Age' => 3600,
-//                // Allow the X-Pagination-Current-Page header to be exposed to the browser.
-//                'Access-Control-Expose-Headers' => ['X-Pagination-Current-Page'],
-//            ],
-//        ];
-
-//        $behaviors['access'] = [
-//            'class' => AccessControl::className(),
-//            'denyCallback' => function ($rule, $action) {
-//                throw new \Exception('You are not allowed to access this page');
-//            },
-//            'only' => ['resetpasswordlin'],
-//            'rules' => [
-//                [
-//                    'allow' => true,
-//                    'actions' => ['login', 'signup', 'resetpasswordlink'],
-//                    'roles' => ['?'], // Guest users
-//                ],
-//                // You can add more rules here to control access to other actions
-//            ],
-//        ];
-
-//        return $behaviors;
-
-//        return [
-//            'corsFilter' => [
-//                'class' => \yii\filters\Cors::className(),
-//                'cors' => [
-//                    // restrict access to
-//                    'Origin' => (YII_ENV_PROD) ? [''] : ['http://localhost:5174'], '*', // look at this
-//                    // Allow only POST and PUT methods
-//                    'Access-Control-Request-Method' => ['GET', 'HEAD', 'POST', 'PUT'],
-//                    // Allow only headers 'X-Wsse'
-//                    'Access-Control-Request-Headers' => ['X-Wsse', 'Content-Type'], '*',
-//                    // Allow credentials (cookies, authorization headers, etc.) to be exposed to the browser
-//                    'Access-Control-Allow-Credentials' => true,
-//                    // Allow OPTIONS caching
-//                    'Access-Control-Max-Age' => 3600,
-//                    // Allow the X-Pagination-Current-Page header to be exposed to the browser.
-//                    'Access-Control-Expose-Headers' => ['X-Pagination-Current-Page'],
-//                ],
-//            ],
-//            'access' => [
-//                'class' => AccessControl::className(),
-////                'denyCallback' => function ($rule, $action) {
-////                    throw new \Exception('You are not allowed to access this page');
-////                },
-//                'only' => ['resetpasswordlink'],
-//                'rules' => [
-//                    [
-//                        'allow' => true,
-//                        'actions' => ['signup', 'resetpasswordlink', 'login'],
-//                        'roles' => ['?'],
-//                    ],
-//                ]
-//            ]
-//        ];
-//    }
-//    public function actions() // modifies the default actions defined by the ActiveController class
-//    {
-//        $actions = parent::actions(); // gets the default actions
-//        unset($actions['create'], $actions['update'], $actions['delete']);
-//        return $actions;
-//    }
-
     public function actionSignup()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -191,6 +48,11 @@ class UserController extends BaseController
         $availableUser = User::findOne(['email' => $params['email']]);
         $phone = User::findOne(['phone' => $params['phone']]);
         if ($user->save()) {
+            // here oooo
+            $auth = Yii::$app->authManager;
+            $userRole = $auth->getRole('user');
+            $auth->assign($userRole, $user->id);
+
             $user->blocked = false;
             $user->login_trials = 0;
             $user->save();
@@ -224,6 +86,8 @@ class UserController extends BaseController
                 if ($user->userActive === true) {
                     if ($user && Yii::$app->security->validatePassword($params['password'], $user->password_hash)) {
                         $tokenJWTs = $user->generateJwt();
+                        // give the user role here
+                        $userRole =
                         $user->blocked = false;
                         $user->login_trials = 0;
                         $user->save();

@@ -27,10 +27,9 @@ class CountyController extends BaseController
 
     public function actionShowcounties()
     {
-//        if (Yii::$app->user->can('uploadService')) {
+//        if (Yii::$app->user->can('createService')) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             $counties = County::find()->all();
-
             return $counties;
 //        } else {
 //            throw new ForbiddenHttpException("You are restricted from this action / endpoint");

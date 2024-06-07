@@ -69,6 +69,14 @@ class User extends ActiveRecord implements IdentityInterface
         }
         return null;
     }
+//    public static function findIdentityByAccessToken($token, $type = null)
+//    {
+//        $data = self::validateJwt($token);
+//        if ($data) {
+//            return static::findOne($data->sub);
+//        }
+//        return null;
+//    }
 
 //    /**
 //     * Finds an identity by the given token.
@@ -116,50 +124,62 @@ class User extends ActiveRecord implements IdentityInterface
     public function generateJwt()
     {
         $key = Yii::$app->params['jwtSecretKey'];
+        $roles = Yii::$app->authManager->getRolesByUser($this->id); // Get roles for the user
+
         $payload = [
-//            'iss' => 'http://localhost:8080',
-//            'aud' => 'http://localhost:3000',
             'iat' => time(),
             'nbf' => time(),
             'exp' => time() + 3600,
             'data' => [
                 'sub' => $this->id,
-                'first name' => $this->first_name,
-                'second name' => $this->second_name,
-                'phone number' => $this->phone,
+                'first_name' => $this->first_name,
+                'second_name' => $this->second_name,
+                'phone' => $this->phone,
                 'email' => $this->email,
+                'roles' => array_keys($roles), // Add roles to the payload
             ],
         ];
-
-        $token = JWT::encode($payload, $key, 'HS256');
-
-        // Store the token in the database
-//        $userToken = new UserTokens();
-//        $userToken->jwt_id = $this->id;
-//        $userToken->jwt_token = $token;
-//        $userToken->created_at = date('Y-m-d H:i:s', $payload['exp']);
-//        $userToken->expires_at = date('Y-m-d H:i:s', $payload['exp']);
-//        $userToken->save();
-//
-//        var_dump($userToken->save());
-        return $token;
+        return JWT::encode($payload, $key, 'HS256');
     }
+
+//    public static function validateJwt($token)
+//    {
+//        $key = Yii::$app->params['jwtSecretKey'];
+//        try {
+//            $decoded = JWT::decode($token, new Key($key, 'HS256'));
+//            // Extract roles from the token
+//            $roles = $decoded->data->roles ?? [];
+//            \Yii::$app->user->identity->roles = $roles;
+//            return $decoded;
+//        } catch (\Exception $e) {
+//            return false;
+//        }
+//    }
+
 
     public static function validateJwt($token)
     {
         $key = Yii::$app->params['jwtSecretKey'];
         try {
             $decoded = JWT::decode($token, new Key($key, 'HS256'));
-            // Check if the token exists in the database and has not expired
-//            $userToken = UserTokens::find()->where(['token' => $token])->one();
-//            if ($userToken && strtotime($userToken->expires_at) > time()) {
-//                return $decoded;
-//            }
+            // Store the decoded token in the user component
+//            Yii::$app->user->identity->jwtPayload = (array) $decoded->data;
             return $decoded;
         } catch (\Exception $e) {
             return false;
         }
     }
+
+//    public static function validateJwt($token)
+//    {
+//        $key = Yii::$app->params['jwtSecretKey'];
+//        try {
+//            $decoded = JWT::decode($token, new Key($key, 'HS256'));
+//            return $decoded;
+//        } catch (\Exception $e) {
+//            return "nothing";
+//        }
+//    }
 
 
     public function generateActivationToken()

@@ -2,9 +2,10 @@
 
 namespace app\controllers;
 
-use yii\filters\auth\HttpBearerAuth;
+use yii\filters\AccessControl;
 use yii\rest\ActiveController;
 use yii\web\Response;
+use yii\filters\auth\HttpBearerAuth;
 
 class BaseController extends ActiveController
 {
@@ -19,42 +20,42 @@ class BaseController extends ActiveController
                 'application/json' => Response::FORMAT_JSON,
             ],
         ];
+
+        // Access control (placed before authenticator)
+        $behaviors['access'] = [
+            'class' => AccessControl::class,
+            'rules' => [
+                [
+                    'allow' => true,
+                    'actions' => ['login', 'signup'],
+                    'roles' => ['?'], // Allow guests (unauthenticated users)
+                ],
+                [
+                    'allow' => true,
+                    'actions' => ['getservices'],
+                    'roles' => ['admin'], // Require admin role
+                ],
+                [
+                    'allow' => true,
+                    'actions' => ['user-only-action'],
+                    'roles' => ['user'], // Require user role
+                ],
+                [
+                    'allow' => true,
+                    'actions' => ['create'],
+                    'roles' => ['createService'], // Require createService role
+                ],
+                // Optionally, add more rules for other roles and actions
+            ],
+        ];
+
+        // JWT Authentication (placed after access control)
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::class,
-            'except' => ['login', 'signup', 'showcounties', 'getservices'],
+            'except' => ['login', 'signup'], // Actions that don't require authentication
         ];
+
         return $behaviors;
     }
-//
-//    public function actions()
-//    {
-//        $actions = parent::actions();
-//        // Disable default actions if needed
-//        unset($actions['create'], $actions['update'], $actions['delete'], $actions['view']);
-//        return $actions;
-//    }
-
-//    public function behaviors() {
-//        return [
-//            'corsFilter' => [
-//                'class' => \yii\filters\Cors::className(),
-//                'cors' => [
-//                    // restrict access to
-////                    'Origin' => (YII_ENV_PROD) ? [''] : ['*'],
-//                    // Allow only POST and PUT methods
-//                    'Access-Control-Request-Method' => ['GET', 'HEAD', 'POST', 'PUT'],
-//                    // Allow only headers 'X-Wsse'
-//                    'Access-Control-Request-Headers' => ['X-Wsse', 'Content-Type'],
-//                    // Allow credentials (cookies, authorization headers, etc.) to be exposed to the browser
-//                    'Access-Control-Allow-Credentials' => true,
-//                    // Allow OPTIONS caching
-//                    'Access-Control-Max-Age' => 3600,
-//                    // Allow the X-Pagination-Current-Page header to be exposed to the browser.
-//                    'Access-Control-Expose-Headers' => ['X-Pagination-Current-Page'],
-//                ],
-//            ],
-//        ];
-//    }
 }
-
 ?>

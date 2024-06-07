@@ -14,7 +14,7 @@ $config = [
     'components' => [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
-            'defaultRoles' => ['guest'],
+//            'defaultRoles' => ['guest'],
         ],
         'response' => [
             // ...
@@ -99,6 +99,8 @@ $config = [
 
                 'GET get/orders' => 'orders/showorders',
                 'POST place/order' => 'orders/ordernow',
+
+                'POST auth/permit' => 'permission/assigncreateservice',
 
 
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
