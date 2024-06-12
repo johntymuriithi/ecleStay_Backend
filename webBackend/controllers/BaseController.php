@@ -21,38 +21,39 @@ class BaseController extends ActiveController
             ],
         ];
 
+        //        // JWT Authentication (placed after access control) // incase it fails,,please login 401
+        $behaviors['authenticator'] = [
+            'class' => HttpBearerAuth::class,
+            'except' => ['addservice', 'signup', 'login', 'getaccommodations', 'getservices', 'showcategories', 'showcounties', 'viewservice', 'toa', 'uploadimage'], // Actions that don't require authentication
+        ];
         // Access control (placed before authenticator)
         $behaviors['access'] = [
             'class' => AccessControl::class,
             'rules' => [
                 [
                     'allow' => true,
-                    'actions' => ['login', 'signup'],
-                    'roles' => ['?'], // Allow guests (unauthenticated users)
+                    'actions' => ['addservice', 'getaccommodations', 'getservices', 'showcategories', 'showcounties' , 'signup', 'login', 'viewservice', 'toa', 'uploadimage'],
+                    'roles' => ['?'], // Allow guests (unauthenticated users) // in short in mean users
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['getservices'],
+                    'actions' => ['ordernow'],
+                    'roles' => ['@'], // authenticated users only // passed the bearer auth
+                ],
+                [
+                    'allow' => true,
+                    'actions' => ['showhosts'],
                     'roles' => ['admin'], // Require admin role
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['user-only-action'],
-                    'roles' => ['user'], // Require user role
+                    'actions' => ['showcounties'],
+                    'roles' => ['host'], // Require user role
                 ],
-                [
-                    'allow' => true,
-                    'actions' => ['create'],
-                    'roles' => ['createService'], // Require createService role
-                ],
-                // Optionally, add more rules for other roles and actions
             ],
-        ];
-
-        // JWT Authentication (placed after access control)
-        $behaviors['authenticator'] = [
-            'class' => HttpBearerAuth::class,
-            'except' => ['login', 'signup'], // Actions that don't require authentication
+            'denyCallback' => function ($rule, $action) {
+                throw new \yii\web\ForbiddenHttpException('No roles set for you.');
+            },
         ];
 
         return $behaviors;

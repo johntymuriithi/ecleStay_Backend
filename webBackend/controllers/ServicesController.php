@@ -13,6 +13,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\web\UploadedFile;
 
 
 class ServicesController extends BaseController
@@ -30,19 +31,44 @@ class ServicesController extends BaseController
 
             // add service images
             if ($service->load($params, '') && $service->save()) {
-                foreach ($params['pictures'] as $picture) {
-                    $images = new Images();
-                    $images->service_id = $service->service_id;
-                    $images->image_url = $picture;
+                $model = new Images();
+                $model->imageFiles = UploadedFile::getInstancesByName('imageFiles');
+                if (Yii::$app->request->isPost && $model->validate()) {
+                    foreach ($model->imageFiles as $file) {
+                        $relativePath = 'uploads/' . uniqid() . '.' . $file->extension;
+                        $absolutePath = Yii::getAlias('@app/') . $relativePath;
 
-                    if (!$images->save()) {
-                        // If saving picture fails, throw an exception
-                        throw new \Exception('Failed to save service picture');
+                        if ($file->saveAs($absolutePath)) {
+                            $id = $service->service_id;
+//                            $id = $_POST['service_id'];
+                            if (!Images::createImage($id, $relativePath)) {
+                                throw new BadRequestHttpException("Failed to Upload Service Image to the db");
+                            }
+                        } else {
+                            Yii::error("Failed to save the file to: " . $absolutePath);
+                            throw  new ForbiddenHttpException("Failed to save th File to Uploads");
+                        }
                     }
+//                    return ['status' => 200, 'message' => 'Service Images Saved Successfully to the database'];
+
+                } else {
+                    var_dump("Validation failed: " . json_encode($model->getErrors()));
+                    throw new BadRequestHttpException("Validation of Service Images Failed, Please try again later");
                 }
 
+//                foreach ($params['pictures'] as $picture) {
+//                    $images = new Images();
+//                    $images->service_id = $service->service_id;
+//                    $images->service_image = $picture;
+//
+//                    if (!$images->save()) {
+//                        // If saving picture fails, throw an exception
+//                        throw new \Exception('Failed to save service picture');
+//                    }
+//                }
+
                 // add extra amenities
-                foreach ($params['amenities'] as $amenity) {
+                foreach ($_POST['amenities'] as $amenity) {
                     $amenities = new Amenities();
                     $amenities->service_id = $service->service_id;
                     $amenities->amenity_name = $amenity;
@@ -54,7 +80,7 @@ class ServicesController extends BaseController
                 }
 
                 // add service roles over here
-                foreach ($params['roles'] as $role) {
+                foreach ($_POST['roles'] as $role) {
                     $roles = new Roles();
                     $roles->service_id = $service->service_id;
                     $roles->role_name = $role;
@@ -64,8 +90,6 @@ class ServicesController extends BaseController
                         throw new \Exception('Failed to save service Roles');
                     }
                 }
-
-
                 $transaction->commit();
                 return ['status' => 'success', 'message' => 'Service Added Successfully'];
             } else {
@@ -78,13 +102,106 @@ class ServicesController extends BaseController
             throw new ForbiddenHttpException($e->getMessage());
         }
     }
+//    public function actionAddservice()
+//    {
+//        Yii::$app->response->format = Response::FORMAT_JSON;
+//        $transaction = Yii::$app->db->beginTransaction(); // Start transaction
+//        $params = \Yii::$app->request->bodyParams;
+////
+//        try {
+//            $service = new Services();
+//
+//            // add service images
+//            if ($service->load($params, '') && $service->save()) {
+////                $files = UploadedFile::getInstancesByName('pictures');
+////
+////                $uploadDir = Yii::getAlias('@webroot/uploads');
+////                if (!is_dir($uploadDir)) {
+////                    if (!mkdir($uploadDir, 0777, true)) {
+////                        throw new ForbiddenHttpException("Failed to create upload directory.");
+////                    }
+////                }
+//
+////                foreach ($files as $file) {
+////                    $imagePath = $uploadDir . uniqid() . '.' . $file->extension;
+////                    if ($file->saveAs($imagePath)) {
+////                        $images = new Images();
+////                        var_dump($service->service_id);
+////                        $images->service_id = $service->service_id;
+////                        $images->file_path = 'gjkhlkjkhgf';
+////                        if (!$images->save()) {
+////
+////                            throw new \Exception('Failed to save image metadata');
+////                        }
+////                    } else {
+////                        throw new \Exception('Failed to save image file');
+////                    }
+////                }
+//                foreach ($params['pictures'] as $picture) {
+//                    $images = new Images();
+//                    $images->service_id = $service->service_id;
+//                    $images->image_url = $picture;
+//
+//                    if (!$images->save()) {
+//                        // If saving picture fails, throw an exception
+//                        throw new \Exception('Failed to save service picture');
+//                    }
+//                }
+//
+//                // add extra amenities
+//                foreach ($params['amenities'] as $amenity) {
+//                    $amenities = new Amenities();
+//                    $amenities->service_id = $service->service_id;
+//                    $amenities->amenity_name = $amenity;
+//
+//                    if (!$amenities->save()) {
+//                        // If saving picture fails, throw an exception
+//                        throw new \Exception('Failed to save service Amenities');
+//                    }
+//                }
+//
+//                // add service roles over here
+//                foreach ($params['roles'] as $role) {
+//                    $roles = new Roles();
+//                    $roles->service_id = $service->service_id;
+//                    $roles->role_name = $role;
+//
+//                    if (!$roles->save()) {
+//                        // If saving picture fails, throw an exception
+//                        throw new \Exception('Failed to save service Roles');
+//                    }
+//                }
+//
+//
+//                $transaction->commit();
+//                return ['status' => 'success', 'message' => 'Service Added Successfully'];
+//            } else {
+//                // If saving service fails, throw an exception
+//                throw new \Exception('Failed to save service');
+//            }
+//            }
+//        catch
+//            (\Exception $e) {
+//                // Roll back the transaction in case of an error
+//                $transaction->rollBack();
+//                throw new ForbiddenHttpException($e->getMessage());
+//            }
+//    }
 
     public function actionGetservices() {
         $services = Services::find()
             ->with('images', 'county', 'hosts', 'roles', 'amenities')
             ->asArray() // Convert the result to an array
             ->all();
-        return $services;
+        if ($services) {
+            return [
+                'status' => 200,
+            'data' => ['Services' => $services],
+                'message' => 'Services Retrived Successfully',
+            ];
+        } else {
+            throw new NotFoundHttpException("No services Found in the Database");
+        }
     }
 
     public function actionViewservice($id)
@@ -100,8 +217,11 @@ class ServicesController extends BaseController
 
         // Check if the service was found
         if ($service) {
-            // Return the service data
-            return $service;
+            return [
+                'status' => 200,
+                'data' => ['Service' => $service],
+                'message' => 'Service Retrived Successfully',
+            ];
         } else {
             // Throw an exception if the service was not found
             throw new NotFoundHttpException("Service not found");

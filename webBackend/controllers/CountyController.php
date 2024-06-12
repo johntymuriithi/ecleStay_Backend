@@ -51,7 +51,6 @@ class CountyController extends BaseController
         } else {
             throw new ForbiddenHttpException("Well,,you are forbidden boohoo");
         }
-
     }
 }
 

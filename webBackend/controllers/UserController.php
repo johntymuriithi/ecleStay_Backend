@@ -1,6 +1,7 @@
 <?php
 namespace app\controllers;
 
+use app\models\Services;
 use Cassandra\Value;
 use Yii;
 use yii\base\Security;
@@ -23,7 +24,6 @@ use yii\filters;
 class UserController extends BaseController
 {
     public $modelClass = 'app\models\User';// specifies the model this controller will use
-
     public function actionSignup()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -65,7 +65,7 @@ class UserController extends BaseController
 <p>Please click below Button to activate your account</p>
 <a href='http://localhost:8080/user/activateuser?token={$user->activationToken}'>Activate Account</a>")
                 ->send();
-            return ['status' => 200];
+            return ['status' => 200, 'message' => 'User Sign up was Successful'];
         } elseif ($availableUser != null) {
             throw new ConflictHttpException("User with the same Email Exists");
         }elseif ($phone != null) {
@@ -194,7 +194,7 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
     // don'$this->do thos in production please this is for testing only
     public function actionToa()
     {
-        $users = User::find()->all();
+        $users = Services::find()->all();
         foreach ($users as $user) {
 
             $user->delete();

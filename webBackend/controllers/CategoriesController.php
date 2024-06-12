@@ -21,11 +21,10 @@ class CategoriesController extends BaseController
     {
         $category = Categories::find()->all();
         if ($category) {
-
             return $category;
 
         } else {
-            throw new NotFoundHttpException("No types in the database");
+            throw new NotFoundHttpException("No categories in the database");
         }
     }
 
@@ -65,7 +64,15 @@ class CategoriesController extends BaseController
             }])
             ->with(['hosts'])
             ->all();
-        return $services;
+        if ($services) {
+            return [
+                'status' => 200,
+                'data' => [$categoryName . 's' => $services],
+                'message' => 'Services By Category Retrived Successfully',
+            ];
+        } else {
+            throw new NotFoundHttpException("Services of the category $categoryName not found");
+        }
 //        $response = [];
 
 //        foreach ($services as $service) {

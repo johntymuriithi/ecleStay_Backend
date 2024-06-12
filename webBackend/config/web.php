@@ -14,13 +14,24 @@ $config = [
     'components' => [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
-//            'defaultRoles' => ['guest'],
+            'defaultRoles' => ['guest'],
         ],
+         // only this
+//        'corsFilter' => [
+//            'class' => \yii\filters\Cors::class,
+//            'cors' => [
+//                'Origin' => ['*'], // Adjust as needed
+//                'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//                'Access-Control-Allow-Credentials' => true,
+//                'Access-Control-Max-Age' => 3600, // Cache for 1 hour
+//                'Access-Control-Allow-Headers' => ['Content-Type', 'Authorization'],
+//            ],
+//        ],
         'response' => [
             // ...
             'on beforeSend' => function ($event) {
                 $response = $event->sender;
-                $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:5173');
+                $response->headers->set('Access-Control-Allow-Origin', '*');
                 $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); // Allow all common HTTP methods
                 $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow 'Content-Type' and 'Authorization' headers
             },
@@ -101,6 +112,8 @@ $config = [
                 'POST place/order' => 'orders/ordernow',
 
                 'POST auth/permit' => 'permission/assigncreateservice',
+
+                'POST add/imager' => 'images/uploadimage',
 
 
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',

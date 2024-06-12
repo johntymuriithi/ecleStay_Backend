@@ -129,7 +129,7 @@ class User extends ActiveRecord implements IdentityInterface
         $payload = [
             'iat' => time(),
             'nbf' => time(),
-            'exp' => time() + 3600,
+            'exp' => time() + 200,
             'data' => [
                 'sub' => $this->id,
                 'first_name' => $this->first_name,
@@ -163,7 +163,7 @@ class User extends ActiveRecord implements IdentityInterface
         try {
             $decoded = JWT::decode($token, new Key($key, 'HS256'));
             // Store the decoded token in the user component
-//            Yii::$app->user->identity->jwtPayload = (array) $decoded->data;
+//            Yii::$app->user->identity = (array) $decoded->data;
             return $decoded;
         } catch (\Exception $e) {
             return false;
