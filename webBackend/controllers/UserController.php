@@ -1,6 +1,7 @@
 <?php
 namespace app\controllers;
 
+use app\models\Hosts;
 use app\models\Services;
 use Cassandra\Value;
 use Yii;
@@ -194,7 +195,7 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
     // don'$this->do thos in production please this is for testing only
     public function actionToa()
     {
-        $users = Services::find()->all();
+        $users = Hosts::find()->all();
         foreach ($users as $user) {
 
             $user->delete();

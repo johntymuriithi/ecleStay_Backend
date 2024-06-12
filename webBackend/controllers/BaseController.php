@@ -24,7 +24,7 @@ class BaseController extends ActiveController
         //        // JWT Authentication (placed after access control) // incase it fails,,please login 401
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::class,
-            'except' => ['addservice', 'signup', 'login', 'getaccommodations', 'getservices', 'showcategories', 'showcounties', 'viewservice', 'toa', 'uploadimage'], // Actions that don't require authentication
+            'except' => ['showtypes', 'addservice', 'signup', 'login', 'getaccommodations', 'getservices', 'showcategories', 'showcounties', 'viewservice', 'toa', 'uploadimage', 'addhosts', 'resetpasswordlink', 'resetpassword'], // Actions that don't require authentication
         ];
         // Access control (placed before authenticator)
         $behaviors['access'] = [
@@ -32,12 +32,12 @@ class BaseController extends ActiveController
             'rules' => [
                 [
                     'allow' => true,
-                    'actions' => ['addservice', 'getaccommodations', 'getservices', 'showcategories', 'showcounties' , 'signup', 'login', 'viewservice', 'toa', 'uploadimage'],
+                    'actions' => ['showtypes', 'addservice', 'getaccommodations', 'getservices', 'showcategories', 'showcounties' , 'signup', 'login', 'viewservice', 'toa', 'uploadimage', 'addhosts', 'resetpasswordlink', 'resetpassword'],
                     'roles' => ['?'], // Allow guests (unauthenticated users) // in short in mean users
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['ordernow'],
+                    'actions' => ['ordernow', 'showtypes'],
                     'roles' => ['@'], // authenticated users only // passed the bearer auth
                 ],
                 [

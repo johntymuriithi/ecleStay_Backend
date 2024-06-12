@@ -32,6 +32,7 @@ class Images extends ActiveRecord
 //            [['service_id'], 'integer'], // If you have a service_id, ensure it is validated as an integer
 //        ];
     }
+
     public static function createImage($serviceId, $imageUrl)
     {
         return Yii::$app->db->createCommand()->insert(self::tableName(), [
