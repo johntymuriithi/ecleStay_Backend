@@ -111,7 +111,10 @@ $config = [
                 'GET get/orders' => 'orders/showorders',
                 'POST place/order' => 'orders/ordernow',
 
-                'POST auth/permit' => 'permission/assigncreateservice',
+                'POST auth/permit/host' => 'permission/assignhost',
+                'POST auth/permit/admin' => 'permission/assignadmin',
+
+                'POST auth/revoke/role' => 'permission/rolerevoker',
 
                 'POST add/imager' => 'images/uploadimage',
 

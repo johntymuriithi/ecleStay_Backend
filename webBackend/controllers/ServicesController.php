@@ -19,7 +19,7 @@ use yii\web\UploadedFile;
 
 class ServicesController extends BaseController
 {
-    public $modelClass = 'app\models\Services'; // Specifies the model this controller will use
+    public $modelClass = 'app\models\User';// Specifies the model this controller will use
 
     public function actionAddservice()
     {
