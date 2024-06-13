@@ -33,6 +33,11 @@ class Images extends ActiveRecord
 //        ];
     }
 
+//    public function getServiceImageUrl()
+//    {
+//        return Yii::$app->urlManager->createAbsoluteUrl(['uploads/' . $this->service_image]);
+//    }
+
     public static function createImage($serviceId, $imageUrl)
     {
         return Yii::$app->db->createCommand()->insert(self::tableName(), [
@@ -41,7 +46,10 @@ class Images extends ActiveRecord
         ])->execute();
     }
 
-
+    public function getImages()
+    {
+        return $this->hasMany(Images::class, ['service_id' => 'service_id']);
+    }
 }
 
 ?>

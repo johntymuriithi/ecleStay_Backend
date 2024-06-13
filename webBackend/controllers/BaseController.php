@@ -24,7 +24,7 @@ class BaseController extends ActiveController
         //        // JWT Authentication (placed after access control) // incase it fails,,please login 401
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::class,
-            'except' => ['showtypes', 'addservice', 'signup', 'login', 'getaccommodations', 'getservices', 'showcategories', 'showcounties', 'viewservice', 'toa', 'uploadimage', 'addhosts', 'resetpasswordlink', 'resetpassword'], // Actions that don't require authentication
+            'except' => ['addcounty', 'showtypes', 'addservice', 'signup', 'login', 'getaccommodations', 'getservices', 'showcategories', 'showcounties', 'viewservice', 'toa', 'uploadimage', 'addhosts', 'resetpasswordlink', 'resetpassword', 'showhosts'], // Actions that don't require authentication
         ];
         // Access control (placed before authenticator)
         $behaviors['access'] = [
@@ -32,7 +32,7 @@ class BaseController extends ActiveController
             'rules' => [
                 [
                     'allow' => true,
-                    'actions' => ['showtypes', 'addservice', 'getaccommodations', 'getservices', 'showcategories', 'showcounties' , 'signup', 'login', 'viewservice', 'toa', 'uploadimage', 'addhosts', 'resetpasswordlink', 'resetpassword'],
+                    'actions' => ['addcounty', 'showtypes', 'addservice', 'getaccommodations', 'getservices', 'showcategories', 'showcounties' , 'signup', 'login', 'viewservice', 'toa', 'uploadimage', 'addhosts', 'resetpasswordlink', 'resetpassword', 'showhosts'],
                     'roles' => ['?'], // Allow guests (unauthenticated users) // in short in mean users
                 ],
                 [

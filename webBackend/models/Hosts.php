@@ -20,7 +20,7 @@ class Hosts extends ActiveRecord
             [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg', 'maxFiles' => 1, 'message' => 'Please upload a picture.'],
             // bst docs
             [['businessFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'pdf, docx', 'maxFiles' => 1, 'message' => 'Please upload a file.'],
-            [['language', 'email', 'about', 'number', 'host_name', 'county_id', 'imageFile', 'business_name', 'business_doc'], 'required'],
+            [['language', 'email', 'about', 'number', 'host_name', 'county_id', 'imageFile', 'business_name', 'businessFile'], 'required'],
             [['language'], 'string', 'max' => 500],
             [['email'], 'string', 'max' => 100],
             [['about'], 'string', 'max' => 100],

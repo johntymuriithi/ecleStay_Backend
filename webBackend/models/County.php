@@ -6,6 +6,8 @@ use yii\db\ActiveRecord;
 
 class County extends ActiveRecord
 {
+    public $countyFile;
+
     public static function tableName()
     {
         return 'counties';
@@ -14,11 +16,21 @@ class County extends ActiveRecord
     public function rules()
     {
         return [
-            [['county_name', 'county_code', 'county_url'], 'required'],
-            [['county_name'], 'string', 'max' => 50],
+            [['countyFile', 'county_code', 'county_name'], 'required'],
+            // county image
+            [['countyFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'pdf', 'maxFiles' => 1, 'message' => 'Please upload a picture.'],
+//            [['countyName'], 'string', 'max' => 50],
             [['county_code'], 'integer'],
-            [['county_url'], 'string', 'max' => 255]
         ];
+    }
+
+    public static function countyImager($imageUrl, $Others)
+    {
+        return Yii::$app->db->createCommand()->insert(self::tableName(), [
+            'county_code' => $Others['county_code'],
+            'county_name' => $Others['county_name'],
+            'county_url' => $imageUrl,
+        ])->execute();
     }
 
     public function getServices()

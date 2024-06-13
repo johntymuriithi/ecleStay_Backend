@@ -21,10 +21,13 @@ class HostsController extends BaseController
     {
         $hosts = Hosts::find()->all();
         if ($hosts) {
+            foreach ($hosts as &$image) {
+                $image['picture'] = '/var/www/html/ecleStay_Backend/webBackend/' . $image['picture'];
+                $image['business_doc'] = '/var/www/html/ecleStay_Backend/webBackend/' . $image['business_doc']; // don't do in productions Jonhty
+            }
             return $hosts;
-        } else {
+        } else
             throw new NotFoundHttpException("No Hosts in the database");
-        }
     }
 
     public function actionAddhosts()
@@ -35,7 +38,6 @@ class HostsController extends BaseController
         // Assign POST data to the model attributes
         $host->host_name = Yii::$app->request->post('host_name');
         $host->business_name = Yii::$app->request->post('business_name');
-        $host->business_doc = Yii::$app->request->post('business_doc');
         $host->language = Yii::$app->request->post('language');
         $host->email = Yii::$app->request->post('email');
         $host->about = Yii::$app->request->post('about');
@@ -44,32 +46,35 @@ class HostsController extends BaseController
 
         // Get uploaded file
         $host->imageFile = UploadedFile::getInstanceByName('imageFile');
-//        $host->businessFile = UploadedFile::getInstanceByName('businessFile');
-
+        $host->businessFile = UploadedFile::getInstanceByName('businessFile');
 
         // Check if request is POST and validate model
         if (Yii::$app->request->isPost && $host->validate()) {
             // Define uploads directory path
-            $uploadsDir = Yii::getAlias('@app/web/uploads/hosts');
+            $uploadsDir = Yii::getAlias('@app/uploads/hosts');
+            $uploadsDir2 = Yii::getAlias('@app/uploads/files');
             if (!is_dir($uploadsDir)) {
-                // Create the directory if it does not exist
                 if (!mkdir($uploadsDir, 0755, true)) {
                     Yii::error("Failed to create directory: " . $uploadsDir);
                     throw new \yii\web\ServerErrorHttpException("Failed to create directory: " . $uploadsDir);
                 }
             }
-
-            // Generate a unique file name
+            if (!is_dir($uploadsDir2)) {
+                if (!mkdir($uploadsDir2, 0755, true)) {
+                    Yii::error("Failed to create directory: " . $uploadsDir2);
+                    throw new \yii\web\ServerErrorHttpException("Failed to create directory: " . $uploadsDir2);
+                }
+            }
             $uniqueFileName = uniqid() . '.' . $host->imageFile->extension;
-
-            // Define relative and absolute paths
             $relativePath = 'uploads/hosts/' . $uniqueFileName;
-            $absolutePath = Yii::getAlias('@app/web/') . $relativePath;
+            $absolutePath = Yii::getAlias('@app/') . $relativePath;
+            $uniqueFileName1 = uniqid() . '.' . $host->businessFile->extension;
+            $relativePath1 = 'uploads/files/' . $uniqueFileName1;
+            $absolutePath1 = Yii::getAlias('@app/') . $relativePath1;
 
             // Save the uploaded file
-            if ($host->imageFile->saveAs($absolutePath)) {
-                // Attempt to insert data into the database
-                if (Hosts::hostImager($relativePath, Yii::$app->request->post())) {
+            if ($host->imageFile->saveAs($absolutePath) && $host->businessFile->saveAs($absolutePath1)) {
+                if (Hosts::hostImager($relativePath, Yii::$app->request->post(), $relativePath1)) {
                     return "Hosts Added Successfully";
                 } else {
                     Yii::error("Failed to insert data into database.");

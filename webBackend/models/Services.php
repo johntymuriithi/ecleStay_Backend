@@ -59,13 +59,22 @@ class Services extends ActiveRecord
         $fields = parent::fields();
 
         // Explicitly include the related fields
+//        foreach ($service as &$service) {
+//            if (isset($service['images']) && is_array($service['images'])) {
+//                foreach ($service['images'] as &$image) {
+//                    $image['service_image'] = '/var/www/html/ecleStay_Backend/webBackend/' . $image['service_image'];
+//                }
+//            }
+//        }
         $fields['images'] = function () {
-            return $this->images;
+           return  $this->images;
         };
+
         $fields['county'] = function () {
             return $this->county;
         };
         $fields['hosts'] = function () {
+            $this->hosts->picture =  'John';
             return $this->hosts;
         };
         $fields['types'] = function () {

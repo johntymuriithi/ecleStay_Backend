@@ -6,6 +6,7 @@ use app\models\Images;
 use app\models\Roles;
 use app\models\Services;
 use app\models\Types;
+use yii\helpers\Url;
 use Yii;
 use yii\rest\ActiveController;
 use app\models\County;
@@ -94,6 +95,22 @@ class ServicesController extends BaseController
             ->with('images', 'county', 'hosts', 'roles', 'amenities')
             ->asArray() // Convert the result to an array
             ->all();
+
+        foreach ($services as &$service) {
+            if (isset($service['images']) && is_array($service['images'])) {
+                foreach ($service['images'] as &$image) {
+                    $image['service_image'] = '/var/www/html/ecleStay_Backend/webBackend/' . $image['service_image'];
+                }
+            }
+            if (isset($service['hosts']) && is_array($service['hosts'])) {
+                $service['hosts']['picture'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['hosts']['picture'];
+                $service['hosts']['business_doc'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['hosts']['business_doc'];
+
+            }
+            if (isset($service['county']) && is_array($service['county'])) {
+                $service['county']['county_url'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['county']['county_url'];
+            }
+        }
         if ($services) {
             return [
                 'status' => 200,
@@ -109,17 +126,36 @@ class ServicesController extends BaseController
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         // Find the service by ID, including related images and county
-        $service = Services::find()
+        $services = Services::find()
             ->with('images', 'county', 'hosts', 'roles', 'amenities')
             ->where(['service_id' => $id])
             ->asArray() // Convert the result to an array
             ->one();
 
+        $services = array($services); // wow,,I can do it yoh!!!!
+
         // Check if the service was found
-        if ($service) {
+
+        foreach ($services as &$service) {
+            if (isset($service['images']) && is_array($service['images'])) {
+                foreach ($service['images'] as &$image) {
+                    $image['service_image'] = '/var/www/html/ecleStay_Backend/webBackend/' . $image['service_image'];
+                }
+            }
+            if (isset($service['hosts']) && is_array($service['hosts'])) {
+                $service['hosts']['picture'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['hosts']['picture'];
+                $service['hosts']['business_doc'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['hosts']['business_doc'];
+
+            }
+            if (isset($service['county']) && is_array($service['county'])) {
+                $service['county']['county_url'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['county']['county_url'];
+            }
+        }
+
+        if ($services) {
             return [
                 'status' => 200,
-                'data' => ['Service' => $service],
+                'data' => ['Service' => $services],
                 'message' => 'Service Retrived Successfully',
             ];
         } else {

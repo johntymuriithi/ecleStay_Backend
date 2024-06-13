@@ -1,6 +1,7 @@
 <?php
 namespace app\controllers;
 
+use app\models\County;
 use app\models\Hosts;
 use app\models\Services;
 use Cassandra\Value;
@@ -193,11 +194,10 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
 
 
     // don'$this->do thos in production please this is for testing only
-    public function actionToa()
+    public function actionToa($victim)
     {
-        $users = Hosts::find()->all();
+        $users = County::find()->all();
         foreach ($users as $user) {
-
             $user->delete();
         }
     }
