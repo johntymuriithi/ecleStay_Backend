@@ -6,6 +6,7 @@ use app\models\Hosts;
 use app\models\User;
 use Yii;
 use yii\web\BadRequestHttpException;
+use yii\web\ForbiddenHttpException;
 
 class PermissionController extends BaseController
 {
@@ -13,13 +14,20 @@ class PermissionController extends BaseController
 
     public function actionAssignhost($userId)
     {
+        $user = User::findOne(['id' => $userId]);
+        if (!$user) {
+            throw new ForbiddenHttpException("Please Sign Up first to proceed with this Request");
+        }
+        $email = $user->email;
+        $userHost = Hosts::findOne(['email' => $email]);
+        if (!$userHost) {
+            Yii::$app->response->statusCode = 403;
+            return [
+                'status' => 403,
+                'message' => 'Please show your Interest on This Role by first registering to become a Host',
+            ];
+        }
         $auth = Yii::$app->authManager;
-//        $user = User::findOne(['id' => $userId]);
-//        $email = $user->email;
-//        $userHost = Hosts::findOne(['email' => $email]);
-//        if (!$userHost) {
-//            throw new BadRequestHttpException("Must os Sign Up with Us first");
-//        }
         // we first check if the user already has the role
         $isHe = $auth->getAssignment('host', $userId);
         if ($isHe) {
@@ -29,17 +37,14 @@ class PermissionController extends BaseController
         if (!$auth->assign($userRole, $userId)) {
             throw new BadRequestHttpException("Failed to assign the to this User, please try again");
         }
-
-//        $userHost->approved = true;
-//
-//        $userr = new Hosts();
-//        if (!$userHost->save()) {
-//            throw new BadRequestHttpException("Failed to approve Hosts");
-//        }
         return ["status" => 200, 'Message' => "Role HOST assigned successfully"];
     }
     public function actionAssignadmin($userId)
     {
+        $user = User::findOne(['id' => $userId]);
+        if (!$user) {
+            throw new ForbiddenHttpException("Please Sign Up first to proceed with this Request");
+        }
         $auth = Yii::$app->authManager;
         // we first check if the user already has the role
         $isHe = $auth->getAssignment('admin', $userId);

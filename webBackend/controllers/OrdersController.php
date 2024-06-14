@@ -16,9 +16,7 @@ class OrdersController extends BaseController
     {
         $orders = Orders::find()->all();
         if ($orders) {
-
             return $orders;
-
         } else {
             throw new NotFoundHttpException("No Orders for now!");
         }
@@ -27,9 +25,8 @@ class OrdersController extends BaseController
     // lets now handle ordering man man
 
     public function actionOrdernow() {
-        $id = Yii::$app->user->id;
-        var_dump($id);
 
+        $id = Yii::$app->user->id;
         \Yii::$app->response->format = Response::FORMAT_JSON;
         $params = \Yii::$app->request->bodyParams;
 

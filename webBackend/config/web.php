@@ -47,7 +47,9 @@ $config = [
         ],
         'user' => [
             'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
+            'enableAutoLogin' => false, // Set to true if you want to use cookie-based auth
+//            'enableSession' => false, // For stateless authentication like JWT
+//            'loginUrl' => null, // No redirect for API requests
         ],
         'errorHandler' => [
             // Set a custom error handler if not using site/error
@@ -65,7 +67,6 @@ $config = [
             ],
             'useFileTransport' => false,
         ],
-
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [

@@ -24,26 +24,19 @@ class BaseController extends ActiveController
         //        // JWT Authentication (placed after access control) // incase it fails,,please login 401
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::class,
-            'except' => ['addcounty', 'showtypes',
-                'addservice', 'signup', 'login', 'getaccommodations', 'getservices',
-                'showcategories', 'showcounties', 'viewservice', 'toa', 'uploadimage',
-                'addhosts', 'resetpasswordlink', 'resetpassword', 'showhosts', 'assignadmin', 'assignhost', 'rolerevoker'], // Actions that don't require authentication
+            'except' => ['login', 'signup'], // Actions that don't require authentication
         ];
-        // Access control (placed before authenticator)
         $behaviors['access'] = [
             'class' => AccessControl::class,
             'rules' => [
                 [
                     'allow' => true,
-                    'actions' => ['addcounty', 'showtypes', 'addservice', 'getaccommodations',
-                        'getservices', 'showcategories', 'showcounties' , 'signup', 'login',
-                        'viewservice', 'toa', 'uploadimage', 'addhosts', 'resetpasswordlink',
-                        'resetpassword', 'showhosts', 'assignadmin', 'assignhost', 'rolerevoker'],
+                    'actions' => ['login', 'signup'],
                     'roles' => ['?'], // Allow guests (unauthenticated users) // in short in mean users
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['ordernow', 'showtypes'],
+                    'actions' => ['showtypes', 'ordernow'],
                     'roles' => ['@'], // authenticated users only // passed the bearer auth
                 ],
                 [
@@ -58,7 +51,7 @@ class BaseController extends ActiveController
                 ],
             ],
             'denyCallback' => function ($rule, $action) {
-                throw new \yii\web\ForbiddenHttpException('No roles set for you.');
+                throw new \yii\web\ForbiddenHttpException('Sorry,You are not Allowed to Access This ACTION.');
             },
         ];
 

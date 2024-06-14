@@ -23,6 +23,7 @@ $config = [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+
         'log' => [
             'targets' => [
                 [

@@ -11,6 +11,7 @@ use yii\base\NotSupportedException;
 
 class User extends ActiveRecord implements IdentityInterface
 {
+    public $modelClass = 'app\models\User';
     public $password; // For storing the plaintext password during signup
 
     /**
@@ -63,11 +64,14 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        $decoded = static::validateJwt($token);
-        if ($decoded) {
-            return static::findOne(['id' => $decoded->data->sub]);
+        $key = Yii::$app->params['jwtSecretKey']; // Ensure this key matches the one used to sign the token
+        try {
+            $decoded = JWT::decode($token, new Key($key, 'HS256')); // Decode the token
+            return static::findOne($decoded->data->sub); // Return the user identified by the token
+        } catch (\Exception $e) {
+            Yii::error('Invalid token: ' . $e->getMessage());
+            return null;
         }
-        return null;
     }
 //    public static function findIdentityByAccessToken($token, $type = null)
 //    {
@@ -129,7 +133,7 @@ class User extends ActiveRecord implements IdentityInterface
         $payload = [
             'iat' => time(),
             'nbf' => time(),
-            'exp' => time() + 200,
+            'exp' => time() + 56777780,
             'data' => [
                 'sub' => $this->id,
                 'first_name' => $this->first_name,
@@ -162,13 +166,14 @@ class User extends ActiveRecord implements IdentityInterface
         $key = Yii::$app->params['jwtSecretKey'];
         try {
             $decoded = JWT::decode($token, new Key($key, 'HS256'));
-            // Store the decoded token in the user component
-//            Yii::$app->user->identity = (array) $decoded->data;
+            Yii::info("Decoded token: " . json_encode($decoded), __METHOD__);
             return $decoded;
         } catch (\Exception $e) {
-            return false;
+            Yii::error("JWT validation failed: " . $e->getMessage(), __METHOD__);
+            return null;
         }
     }
+
 
 //    public static function validateJwt($token)
 //    {
