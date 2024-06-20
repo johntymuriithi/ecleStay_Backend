@@ -18,7 +18,6 @@ class TypesController extends BaseController
     {
         $types = Types::find()->all();
         if ($types) {
-
             return $types;
 
         } else {

@@ -89,7 +89,6 @@ class UserController extends BaseController
                     if ($user && Yii::$app->security->validatePassword($params['password'], $user->password_hash)) {
                         $tokenJWTs = $user->generateJwt();
                         // give the user role here
-                        $userRole =
                         $user->blocked = false;
                         $user->login_trials = 0;
                         $user->save();

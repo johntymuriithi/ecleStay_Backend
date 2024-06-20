@@ -24,29 +24,29 @@ class BaseController extends ActiveController
         //        // JWT Authentication (placed after access control) // incase it fails,,please login 401
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::class,
-            'except' => ['login', 'signup'], // Actions that don't require authentication
+            'except' => ['login', 'signup', 'addservice', 'viewservice', 'showcategories', 'addcategory', 'getaccommodations', 'searchtype', 'showtypes', 'addtypes', 'addhosts', 'showhosts', 'showcounties', 'getservices'], // Actions that don't require authentication
         ];
         $behaviors['access'] = [
             'class' => AccessControl::class,
             'rules' => [
                 [
                     'allow' => true,
-                    'actions' => ['login', 'signup'],
+                    'actions' => ['login', 'signup', 'addservice', 'getservices', 'viewservice', 'showcategories', 'addcategory', 'getaccommodations', 'searchtype', 'showtypes', 'addtypes', 'addhosts', 'showhosts', 'showcounties'],
                     'roles' => ['?'], // Allow guests (unauthenticated users) // in short in mean users
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['showtypes', 'ordernow'],
+                    'actions' => ['showtypes', 'ordernow', 'addhosts', 'toa', 'showcategories'],
                     'roles' => ['@'], // authenticated users only // passed the bearer auth
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['showhosts'],
+                    'actions' => ['showhosts', 'showcounties', 'addcounty', 'addtypes', 'addservice', 'getaccommodations'],
                     'roles' => ['admin'], // Require admin role
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['showcounties'],
+                    'actions' => [''],
                     'roles' => ['host'], // Require user role
                 ],
             ],

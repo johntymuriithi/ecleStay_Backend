@@ -99,7 +99,9 @@ class ServicesController extends BaseController
         foreach ($services as &$service) {
             if (isset($service['images']) && is_array($service['images'])) {
                 foreach ($service['images'] as &$image) {
-                    $image['service_image'] = '/var/www/html/ecleStay_Backend/webBackend/' . $image['service_image'];
+//                    $image['service_image'] = '/var/www/html/ecleStay_Backend/webBackend/' . $image['service_image'];
+                    $baseUrl = Yii::$app->request->hostInfo . Yii::$app->request->baseUrl;
+                    $image['service_image'] = Yii::$app->urlManager->createAbsoluteUrl('/var/www/html/ecleStay_Backend/webBackend/' . $image['service_image']);
                 }
             }
             if (isset($service['hosts']) && is_array($service['hosts'])) {
@@ -139,7 +141,8 @@ class ServicesController extends BaseController
         foreach ($services as &$service) {
             if (isset($service['images']) && is_array($service['images'])) {
                 foreach ($service['images'] as &$image) {
-                    $image['service_image'] = '/var/www/html/ecleStay_Backend/webBackend/' . $image['service_image'];
+//                   $image['service_image'] = '/var/www/html/ecleStay_Backend/webBackend/' . $image['service_image'];
+                    $image['service_image'] = Yii::$app->urlManager->createAbsoluteUrl($image['service_image']);
                 }
             }
             if (isset($service['hosts']) && is_array($service['hosts'])) {
