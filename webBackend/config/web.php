@@ -119,6 +119,9 @@ $config = [
 
                 'POST add/imager' => 'images/uploadimage',
 
+                'POST review/host' => 'hoster/reviewhost',
+
+
 
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
             ],

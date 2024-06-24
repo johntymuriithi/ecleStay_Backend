@@ -3,37 +3,41 @@
 use yii\db\Migration;
 
 /**
- * Class m240620_094901_Hoster
+ * Class m240620_100656_Servicer
  */
-class m240620_094901_Hoster extends Migration
+class m240620_100656_Servicer extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable('{{%hoster}}', [
-            'hoster_id' => $this->primaryKey(),
-            'host_id' => $this->integer()->notNull(),
+        $this->createTable('{{%servicer}}', [
+            'servicer_id' => $this->primaryKey(),
+            'service_id' => $this->integer()->notNull(),
             'order_id' => $this->integer()->notNull(), // this the fk of guest
             'rating' => $this->integer(200)->notNull(),
             'description' => $this->string(500)->notNull(),
+            'cleanliness' => $this->integer()->notNull(),
+            'location' => $this->integer()->notNull(),
+            'communication' => $this->integer()->notNull(),
+            'days_stayed' => $this->integer()->notNull(),
             'review_date' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
             'approved' => $this->boolean()->defaultValue(false),
         ]);
 
         $this->addForeignKey(
-            'fk-host',
-            'hoster',
-            'host_id',
-            'hosts',
-            'host_id',
+            'fk-service',
+            'servicer',
+            'service_id',
+            'services',
+            'service_id',
             'CASCADE'
         );
 
         $this->addForeignKey(
             'fk-order',
-            'hoster',
+            'servicer',
             'order_id',
             'orders',
             'order_id',
@@ -47,11 +51,11 @@ class m240620_094901_Hoster extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('fk-host', 'hoster');
-        $this->dropForeignKey('fk-order', 'hoster');
+        $this->dropForeignKey('fk-service', 'servicer');
+        $this->dropForeignKey('fk-order', 'servicer');
 
 //        $this->dropForeignKey('fk-host', 'services');
 
-        $this->dropTable('{{%hoster}}');
+        $this->dropTable('{{%servicer}}');
     }
 }

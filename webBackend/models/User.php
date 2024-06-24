@@ -11,8 +11,10 @@ use yii\base\NotSupportedException;
 
 class User extends ActiveRecord implements IdentityInterface
 {
+    public $imageFile;
     public $modelClass = 'app\models\User';
     public $password; // For storing the plaintext password during signup
+
 
     /**
      * @inheritdoc
@@ -28,7 +30,8 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['first_name', 'second_name', 'email', 'phone', 'password_hash', 'auth_key'], 'required'],
+            [['first_name', 'second_name', 'email', 'phone'], 'required'],
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxFiles' => 1, 'message' => 'Please upload a profile picture.'],
             [['email'], 'email'],
             [['email'], 'unique'],
             [['auth_key'], 'string', 'max' => 32],
@@ -190,6 +193,20 @@ class User extends ActiveRecord implements IdentityInterface
     public function generateActivationToken()
     {
         $this->activationToken = Yii::$app->security->generateRandomString() . '_' . time();
+    }
+
+    public static function userImager($imageUrl, $Others)
+    {
+        return Yii::$app->db->createCommand()->insert(self::tableName(), [
+            'first_name' => $Others['first_name'],
+            'second_name' => $Others['second_name'],
+            'email' => $Others['email'],
+            'phone' => $Others['phone'],
+            'password_hash' => Yii::$app->security->generatePasswordHash($Others['password']),
+            'auth_key' => Yii::$app->security->generateRandomString(),
+            'activationToken' => Yii::$app->security->generateRandomString() . '_' . time(),
+            'profilePic' => $imageUrl,
+        ])->execute();
     }
 }
 

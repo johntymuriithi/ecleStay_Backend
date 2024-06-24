@@ -24,24 +24,24 @@ class BaseController extends ActiveController
         //        // JWT Authentication (placed after access control) // incase it fails,,please login 401
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::class,
-            'except' => ['login', 'signup', 'addservice', 'viewservice', 'showcategories', 'addcategory', 'getaccommodations', 'searchtype', 'showtypes', 'addtypes', 'addhosts', 'showhosts', 'showcounties', 'getservices'], // Actions that don't require authentication
+            'except' => ['login', 'signup', 'addservice', 'viewservice', 'showcategories', 'addcategory', 'getaccommodations', 'searchtype', 'showtypes', 'addtypes', 'addhosts', 'showhosts', 'showcounties', 'getservices', 'resetpasswordlink', 'resetpassword'], // Actions that don't require authentication
         ];
         $behaviors['access'] = [
             'class' => AccessControl::class,
             'rules' => [
                 [
                     'allow' => true,
-                    'actions' => ['login', 'signup', 'addservice', 'getservices', 'viewservice', 'showcategories', 'addcategory', 'getaccommodations', 'searchtype', 'showtypes', 'addtypes', 'addhosts', 'showhosts', 'showcounties'],
+                    'actions' => ['login', 'signup', 'addservice', 'getservices', 'viewservice', 'showcategories', 'addcategory', 'getaccommodations', 'searchtype', 'showtypes', 'addtypes', 'addhosts', 'showhosts', 'showcounties', 'resetpasswordlink', 'resetpassword'],
                     'roles' => ['?'], // Allow guests (unauthenticated users) // in short in mean users
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['showtypes', 'ordernow', 'addhosts', 'toa', 'showcategories'],
+                    'actions' => ['showtypes', 'ordernow', 'addhosts', 'toa', 'showcategories', 'reviewhost'],
                     'roles' => ['@'], // authenticated users only // passed the bearer auth
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['showhosts', 'showcounties', 'addcounty', 'addtypes', 'addservice', 'getaccommodations'],
+                    'actions' => ['showhosts', 'showcounties', 'addcounty', 'addtypes', 'addservice', 'getaccommodations', 'reviewhost'],
                     'roles' => ['admin'], // Require admin role
                 ],
                 [

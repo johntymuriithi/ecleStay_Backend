@@ -20,16 +20,25 @@ use yii\web\ServerErrorHttpException;
 use yii\web\UnauthorizedHttpException;
 use app\models\PasswordResetToken;
 use yii\filters;
+use yii\web\UploadedFile;
+
 //use app\components\JwtMiddleware;
 //use app\components\BaseController;
 
 class UserController extends BaseController
 {
     public $modelClass = 'app\models\User';// specifies the model this controller will use
+
+
     public function actionSignup()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
         $params = Yii::$app->request->bodyParams;
+        $user = new User();
+        $user->first_name = Yii::$app->request->post('first_name');
+        $user->second_name = Yii::$app->request->post('second_name');
+        $user->email = Yii::$app->request->post('email');
+        $user->phone = Yii::$app->request->post('phone');
 
         $requiredFields = ['first_name', 'second_name', 'email', 'phone', 'password'];
 
@@ -38,7 +47,71 @@ class UserController extends BaseController
                 return ['status' => false, 'message' => "Field '$field' is required"];
             }
         }
-        $user = new User();
+
+        // from here
+//        if (UploadedFile::getInstanceByName('imageFile')) {
+//            $user->imageFile = UploadedFile::getInstanceByName('imageFile');
+//            if (Yii::$app->request->isPost && $user->validate()) {
+//
+//                $uploadsDir = Yii::getAlias('@app/uploads/users');
+//                if (!is_dir($uploadsDir)) {
+//                    if (!mkdir($uploadsDir, 0755, true)) {
+//                        Yii::error("Failed to create directory: " . $uploadsDir);
+//                        throw new \yii\web\ServerErrorHttpException("Failed to create directory: " . $uploadsDir);
+//                    }
+//                }
+//                $uniqueFileName = uniqid() . '.' . $user->imageFile->extension;
+//                $relativePath = 'uploads/hosts/' . $uniqueFileName;
+//                $absolutePath = Yii::getAlias('@app/') . $relativePath;
+//
+//                if ($user->imageFile->saveAs($absolutePath)) {
+//                   // outaaa here
+//
+//                    $availableUser = User::findOne(['email' => $params['email']]);
+//                    $phone = User::findOne(['phone' => $params['phone']]);
+//                    if (User::userImager($relativePath, Yii::$app->request->post())) {
+//                        // here oooo
+//                        $auth = Yii::$app->authManager;
+//                        $userr = new User();
+//                        $userRole = $auth->getRole('user');
+//                        $id = self::getSome($params['email']);
+//                        $auth->assign($userRole, $id);
+//
+//                        $userr->blocked = false;
+//                        $userr->login_trials = 0;
+//                        $userr->save();
+//                        $tokenJWT = $user->generateJwt();
+//                        Yii::$app->mailer->compose()
+//                            ->setFrom('ecleStay-no-reply@gmail.com')
+//                            ->setTo($user->email)
+//                            ->setSubject('Welcome to ecleStay')
+//                            ->setHtmlBody("<p>Welcome {$userr->first_name} {$userr->second_name}, to <h1>EcliStay</h1></p>
+//<p>Please click below Button to activate your account</p>
+//<a href='http://localhost:8080/user/activateuser?token={$userr->activationToken}'>Activate Account</a>")
+//                            ->send();
+//                        return ['status' => 200, 'message' => 'User Sign up was Successful'];
+//                    } elseif ($availableUser != null) {
+//                        throw new ConflictHttpException("User with the same Email Exists");
+//                    }elseif ($phone != null) {
+//                        throw new ConflictHttpException("User with the same Number Exists");
+//                    } else {
+//                        return ['status' => false, 'errors' => $user->errors];
+//                    }
+//
+//                    // to here also
+//                } else {
+//                    Yii::error("Failed to save the file to: " . $absolutePath);
+//                    throw new \yii\web\ServerErrorHttpException("Failed to save the file to: " . $absolutePath);
+//                }
+//            } else {
+//                // Output validation errors
+//                Yii::error("Validation failed: " . json_encode($user->getErrors()));
+//                return "Validation failed: " . json_encode($user->getErrors());
+//            }
+//        }
+
+        // to here
+
         $user->first_name = $params['first_name'];
         $user->second_name = $params['second_name'];
         $user->email = $params['email'];
@@ -72,10 +145,16 @@ class UserController extends BaseController
             throw new ConflictHttpException("User with the same Email Exists");
         }elseif ($phone != null) {
             throw new ConflictHttpException("User with the same Number Exists");
-        } else{
+        } else {
             return ['status' => false, 'errors' => $user->errors];
         }
     }
+
+//    public static function getSome($email) {
+//        $id = User::findOne(['email' => $email]);
+//        return $id['id'];
+//    }
+
     public function actionLogin()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -128,7 +207,7 @@ class UserController extends BaseController
         if ($user) {
             $userId = $user->id;
             $token = Yii::$app->security->generateRandomString(64);
-            $expireDate = time() + 120;
+            $expireDate = time() + 12000000;
             if (PasswordResetToken::createToken($userId, $token, $expireDate)) {
                 // Send the token to the user via email
                 $resetLink = Yii::$app->urlManager->createAbsoluteUrl(['resetpasswordlink', 'token' => $token]);
