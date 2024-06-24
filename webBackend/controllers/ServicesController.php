@@ -107,6 +107,7 @@ class ServicesController extends BaseController
             if (isset($service['hosts']) && is_array($service['hosts'])) {
                 $service['hosts']['picture'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['hosts']['picture'];
                 $service['hosts']['business_doc'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['hosts']['business_doc'];
+                $service['hosts']['hostReviews'] = Yii::$app->runAction('hoster/hostreviews', ['id' => $service['hosts']['host_id']]);
 
             }
             if (isset($service['county']) && is_array($service['county'])) {
@@ -116,8 +117,8 @@ class ServicesController extends BaseController
         if ($services) {
             return [
                 'status' => 200,
-            'data' => ['Services' => $services],
                 'message' => 'Services Retrived Successfully',
+                'data' => ['Services' => $services],
             ];
         } else {
             throw new NotFoundHttpException("No services Found in the Database");
@@ -127,6 +128,8 @@ class ServicesController extends BaseController
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
+        if (!Services::findOne(['service_id' => $id]))
+            throw new NotFoundHttpException("The Service was not Found");
         // Find the service by ID, including related images and county
         $services = Services::find()
             ->with('images', 'county', 'hosts', 'roles', 'amenities')
@@ -148,6 +151,7 @@ class ServicesController extends BaseController
             if (isset($service['hosts']) && is_array($service['hosts'])) {
                 $service['hosts']['picture'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['hosts']['picture'];
                 $service['hosts']['business_doc'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['hosts']['business_doc'];
+                $service['hosts']['hostReviews'] = Yii::$app->runAction('hoster/hostreviews', ['id' => $service['hosts']['host_id']]);
 
             }
             if (isset($service['county']) && is_array($service['county'])) {
@@ -158,8 +162,8 @@ class ServicesController extends BaseController
         if ($services) {
             return [
                 'status' => 200,
-                'data' => ['Service' => $services],
                 'message' => 'Service Retrived Successfully',
+                'data' => ['Service' => $services],
             ];
         } else {
             // Throw an exception if the service was not found

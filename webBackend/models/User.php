@@ -206,6 +206,8 @@ class User extends ActiveRecord implements IdentityInterface
             'auth_key' => Yii::$app->security->generateRandomString(),
             'activationToken' => Yii::$app->security->generateRandomString() . '_' . time(),
             'profilePic' => $imageUrl,
+            'blocked' => false,
+            'login_trials' => 0,
         ])->execute();
     }
 }

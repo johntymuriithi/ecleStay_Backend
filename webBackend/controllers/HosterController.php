@@ -4,9 +4,13 @@ namespace app\controllers;
 use app\models\Hoster;
 use app\models\Hosts;
 use app\models\Orders;
+use app\models\User;
+use Cassandra\Date;
+use DateTime;
 use Yii;
 use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
+use yii\web\NotFoundHttpException;
 
 class HosterController extends BaseController {
 
@@ -49,6 +53,51 @@ class HosterController extends BaseController {
             throw new BadRequestHttpException("Failed to save Review, please try again");
         }
     }
+
+    public function actionHostreviews($id)
+    {
+        $limit = 20; // Limit to fetch
+        $page = Yii::$app->request->get('page', 1); // Get the current page from request
+        $offset = ($page - 1) * $limit;
+
+        $reviews = Hoster::find()->where(['host_id' => $id])->limit($limit)->offset($offset)->all();
+        $totalReviews = [];
+
+        foreach ($reviews as $review) {
+            $user = User::findOne(['id' => $review->user_id]);
+
+            if ($user) {
+                $reviewData = [
+                    'review_id' => $review->hoster_id,
+                    'review_date' => $this->helperDate($review->review_date),
+                    'content' => $review->description,
+                    'rating' => $review->rating,
+                    'userPic' => $user->profilePic ?? null,
+                    'userName' => $user->first_name . ' ' . $user->second_name,
+                    'user_registerDate' => $this->helperDate($user->created_at),
+                ];
+
+                $totalReviews[] = $reviewData;
+            } else {
+                throw new NotFoundHttpException("User with ID {$review->user_id} not found.");
+            }
+        }
+
+        return $totalReviews;
+    }
+
+    private function helperDate($timestamp)
+    {
+        // Convert and format the timestamp
+        return Yii::$app->formatter->asDate($timestamp, 'php:j F Y');
+    }
+
+
+//    public function helperDate($user) {
+//        $date = new DateTime($user->created_at);
+//        $formattedDate = $date->format('j F Y');
+//        return $formattedDate;
+//    }
 }
 
 

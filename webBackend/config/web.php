@@ -27,15 +27,15 @@ $config = [
 //                'Access-Control-Allow-Headers' => ['Content-Type', 'Authorization'],
 //            ],
 //        ],
-        'response' => [
-            // ...
-            'on beforeSend' => function ($event) {
-                $response = $event->sender;
-                $response->headers->set('Access-Control-Allow-Origin', '*');
-                $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); // Allow all common HTTP methods
-                $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow 'Content-Type' and 'Authorization' headers
-            },
-        ],
+//        'response' => [
+//            // ...
+//            'on beforeSend' => function ($event) {
+//                $response = $event->sender;
+//                $response->headers->set('Access-Control-Allow-Origin', '*');
+//                $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); // Allow all common HTTP methods
+//                $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow 'Content-Type' and 'Authorization' headers
+//            },
+//        ],
         'request' => [
             'cookieValidationKey' => 'Xr2lmhIFc7MjeeiBaksZQwL6377C99nD',
             'parsers' => [
@@ -120,6 +120,7 @@ $config = [
                 'POST add/imager' => 'images/uploadimage',
 
                 'POST review/host' => 'hoster/reviewhost',
+                'GET show/host/reviews' => 'hoster/hostreviews',
 
 
 

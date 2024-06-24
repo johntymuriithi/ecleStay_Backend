@@ -3,6 +3,7 @@ namespace app\controllers;
 
 use app\models\County;
 use app\models\Hosts;
+use app\models\Orders;
 use app\models\Services;
 use Cassandra\Value;
 use Yii;
@@ -47,68 +48,69 @@ class UserController extends BaseController
                 return ['status' => false, 'message' => "Field '$field' is required"];
             }
         }
+        if (User::findOne(['email' => $params['email']])) {
+            throw new ConflictHttpException("User with the same Email Exists");
+        }
+        if (User::findOne(['phone' => $params['phone']])) {
+            throw new ConflictHttpException("User with the same Number Exists");
+        }
 
         // from here
-//        if (UploadedFile::getInstanceByName('imageFile')) {
-//            $user->imageFile = UploadedFile::getInstanceByName('imageFile');
-//            if (Yii::$app->request->isPost && $user->validate()) {
-//
-//                $uploadsDir = Yii::getAlias('@app/uploads/users');
-//                if (!is_dir($uploadsDir)) {
-//                    if (!mkdir($uploadsDir, 0755, true)) {
-//                        Yii::error("Failed to create directory: " . $uploadsDir);
-//                        throw new \yii\web\ServerErrorHttpException("Failed to create directory: " . $uploadsDir);
-//                    }
-//                }
-//                $uniqueFileName = uniqid() . '.' . $user->imageFile->extension;
-//                $relativePath = 'uploads/hosts/' . $uniqueFileName;
-//                $absolutePath = Yii::getAlias('@app/') . $relativePath;
-//
-//                if ($user->imageFile->saveAs($absolutePath)) {
-//                   // outaaa here
-//
-//                    $availableUser = User::findOne(['email' => $params['email']]);
-//                    $phone = User::findOne(['phone' => $params['phone']]);
-//                    if (User::userImager($relativePath, Yii::$app->request->post())) {
-//                        // here oooo
-//                        $auth = Yii::$app->authManager;
-//                        $userr = new User();
-//                        $userRole = $auth->getRole('user');
-//                        $id = self::getSome($params['email']);
-//                        $auth->assign($userRole, $id);
-//
-//                        $userr->blocked = false;
-//                        $userr->login_trials = 0;
-//                        $userr->save();
-//                        $tokenJWT = $user->generateJwt();
-//                        Yii::$app->mailer->compose()
-//                            ->setFrom('ecleStay-no-reply@gmail.com')
-//                            ->setTo($user->email)
-//                            ->setSubject('Welcome to ecleStay')
-//                            ->setHtmlBody("<p>Welcome {$userr->first_name} {$userr->second_name}, to <h1>EcliStay</h1></p>
-//<p>Please click below Button to activate your account</p>
-//<a href='http://localhost:8080/user/activateuser?token={$userr->activationToken}'>Activate Account</a>")
-//                            ->send();
-//                        return ['status' => 200, 'message' => 'User Sign up was Successful'];
-//                    } elseif ($availableUser != null) {
-//                        throw new ConflictHttpException("User with the same Email Exists");
-//                    }elseif ($phone != null) {
-//                        throw new ConflictHttpException("User with the same Number Exists");
-//                    } else {
-//                        return ['status' => false, 'errors' => $user->errors];
-//                    }
-//
-//                    // to here also
-//                } else {
-//                    Yii::error("Failed to save the file to: " . $absolutePath);
-//                    throw new \yii\web\ServerErrorHttpException("Failed to save the file to: " . $absolutePath);
-//                }
-//            } else {
-//                // Output validation errors
-//                Yii::error("Validation failed: " . json_encode($user->getErrors()));
-//                return "Validation failed: " . json_encode($user->getErrors());
-//            }
-//        }
+        if (UploadedFile::getInstanceByName('imageFile')) {
+            $user->imageFile = UploadedFile::getInstanceByName('imageFile');
+            if (Yii::$app->request->isPost && $user->validate()) {
+
+                $uploadsDir = Yii::getAlias('@app/uploads/users');
+                if (!is_dir($uploadsDir)) {
+                    if (!mkdir($uploadsDir, 0755, true)) {
+                        Yii::error("Failed to create directory: " . $uploadsDir);
+                        throw new \yii\web\ServerErrorHttpException("Failed to create directory: " . $uploadsDir);
+                    }
+                }
+                $uniqueFileName = uniqid() . '.' . $user->imageFile->extension;
+                $relativePath = 'uploads/users/' . $uniqueFileName;
+                $absolutePath = Yii::getAlias('@app/') . $relativePath;
+
+                if ($user->imageFile->saveAs($absolutePath)) {
+                   // outaaa here
+
+                    $availableUser = User::findOne(['email' => $params['email']]);
+                    $phone = User::findOne(['phone' => $params['phone']]);
+                    if (User::userImager($relativePath, Yii::$app->request->post())) {
+                        // here oooo
+                        $auth = Yii::$app->authManager;
+                        $userRole = $auth->getRole('user');
+                        $id = self::getSome($params['email']);
+                        $auth->assign($userRole, $id);
+
+                        Yii::$app->mailer->compose()
+                            ->setFrom('ecleStay-no-reply@gmail.com')
+                            ->setTo($user->email)
+                            ->setSubject('Welcome to ecleStay')
+                            ->setHtmlBody("<p>Welcome {$user->first_name} {$user->second_name}, to <h1>EcliStay</h1></p>
+<p>Please click below Button to activate your account</p>
+<a href='http://localhost:8080/user/activateuser?token={$user->activationToken}'>Activate Account</a>")
+                            ->send();
+                        return ['status' => 200, 'message' => 'User Sign up was Successful'];
+                    } elseif ($availableUser != null) {
+                        throw new ConflictHttpException("User with the same Email Exists");
+                    }elseif ($phone != null) {
+                        throw new ConflictHttpException("User with the same Number Exists");
+                    } else {
+                        return ['status' => false, 'errors' => $user->errors];
+                    }
+
+                    // to here also
+                } else {
+                    Yii::error("Failed to save the file to: " . $absolutePath);
+                    throw new \yii\web\ServerErrorHttpException("Failed to save the file to: " . $absolutePath);
+                }
+            } else {
+                // Output validation errors
+                Yii::error("Validation failed: " . json_encode($user->getErrors()));
+                return "Validation failed: " . json_encode($user->getErrors());
+            }
+        }
 
         // to here
 
@@ -131,7 +133,7 @@ class UserController extends BaseController
             $user->blocked = false;
             $user->login_trials = 0;
             $user->save();
-            $tokenJWT = $user->generateJwt();
+//            $tokenJWT = $user->generateJwt(); // do it during login
             Yii::$app->mailer->compose()
                 ->setFrom('ecleStay-no-reply@gmail.com')
                 ->setTo($user->email)
@@ -150,10 +152,11 @@ class UserController extends BaseController
         }
     }
 
-//    public static function getSome($email) {
-//        $id = User::findOne(['email' => $email]);
-//        return $id['id'];
-//    }
+    // helper for signup, doing some staffy staffy here
+    public static function getSome($email) {
+        $user = User::findOne(['email' => $email]);
+        return $user['id'];
+    }
 
     public function actionLogin()
     {
@@ -274,7 +277,7 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
     // don'$this->do thos in production please this is for testing only
     public function actionToa($victim)
     {
-        $users = County::find()->all();
+        $users = Orders::find()->all();
         foreach ($users as $user) {
             $user->delete();
         }

@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use yii\filters\AccessControl;
+use yii\filters\Cors;
 use yii\rest\ActiveController;
 use yii\web\Response;
 use yii\filters\auth\HttpBearerAuth;
@@ -21,17 +22,29 @@ class BaseController extends ActiveController
             ],
         ];
 
+        $behaviors['corsFilter'] = [
+            'class' => Cors::class,
+            'cors' => [
+                'Origin' => ['*'], // Replace * with your specific origins
+                'Access-Control-Request-Method' => ['POST', 'GET', 'OPTIONS', 'DELETE', 'PUT'],
+                'Access-Control-Allow-Credentials' => true,
+                'Access-Control-Max-Age' => 3600,
+                'Access-Control-Allow-Headers' => ['Content-Type', 'Authorization'],
+            ],
+        ];
+
+
         //        // JWT Authentication (placed after access control) // incase it fails,,please login 401
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::class,
-            'except' => ['login', 'signup', 'addservice', 'viewservice', 'showcategories', 'addcategory', 'getaccommodations', 'searchtype', 'showtypes', 'addtypes', 'addhosts', 'showhosts', 'showcounties', 'getservices', 'resetpasswordlink', 'resetpassword'], // Actions that don't require authentication
+            'except' => ['login', 'signup', 'addservice', 'viewservice', 'showcategories', 'addcategory', 'getaccommodations', 'searchtype', 'showtypes', 'addtypes', 'addhosts', 'showhosts', 'showcounties', 'getservices', 'resetpasswordlink', 'resetpassword', 'hostreviews'], // Actions that don't require authentication
         ];
         $behaviors['access'] = [
             'class' => AccessControl::class,
             'rules' => [
                 [
                     'allow' => true,
-                    'actions' => ['login', 'signup', 'addservice', 'getservices', 'viewservice', 'showcategories', 'addcategory', 'getaccommodations', 'searchtype', 'showtypes', 'addtypes', 'addhosts', 'showhosts', 'showcounties', 'resetpasswordlink', 'resetpassword'],
+                    'actions' => ['login', 'signup', 'addservice', 'getservices', 'viewservice', 'showcategories', 'addcategory', 'getaccommodations', 'searchtype', 'showtypes', 'addtypes', 'addhosts', 'showhosts', 'showcounties', 'resetpasswordlink', 'resetpassword', 'hostreviews'],
                     'roles' => ['?'], // Allow guests (unauthenticated users) // in short in mean users
                 ],
                 [
