@@ -6,6 +6,7 @@ use app\models\Hosts;
 use app\models\Orders;
 use app\models\Services;
 use Cassandra\Value;
+use PHPUnit\Framework\Constraint\Count;
 use Yii;
 use yii\base\Security;
 use yii\filters\AccessControl;
@@ -277,7 +278,7 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
     // don'$this->do thos in production please this is for testing only
     public function actionToa($victim)
     {
-        $users = Orders::find()->all();
+        $users = County::find()->all();
         foreach ($users as $user) {
             $user->delete();
         }

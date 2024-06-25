@@ -18,7 +18,7 @@ class County extends ActiveRecord
         return [
             [['countyFile', 'county_code', 'county_name'], 'required'],
             // county image
-            [['countyFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'pdf', 'maxFiles' => 1, 'message' => 'Please upload a picture.'],
+            [['countyFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpeg, webp, jpg', 'maxFiles' => 1, 'message' => 'Please upload a picture.'],
 //            [['countyName'], 'string', 'max' => 50],
             [['county_code'], 'integer'],
         ];

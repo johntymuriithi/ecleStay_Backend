@@ -34,6 +34,11 @@ class ServicesController extends BaseController
             if ($service->load($params, '') && $service->save()) {
                 $model = new Images();
                 $model->imageFiles = UploadedFile::getInstancesByName('imageFiles');
+//                if (!$model->validate()) {
+//                    var_dump($model->imageFiles);
+//                    var_dump($model->getErrors());
+//                }
+//                var_dump($model->validate());exit;
                 if (Yii::$app->request->isPost && $model->validate()) {
                     foreach ($model->imageFiles as $file) {
                         $relativePath = 'uploads/' . uniqid() . '.' . $file->extension;
@@ -101,17 +106,17 @@ class ServicesController extends BaseController
                 foreach ($service['images'] as &$image) {
 //                    $image['service_image'] = '/var/www/html/ecleStay_Backend/webBackend/' . $image['service_image'];
                     $baseUrl = Yii::$app->request->hostInfo . Yii::$app->request->baseUrl;
-                    $image['service_image'] = Yii::$app->urlManager->createAbsoluteUrl('/var/www/html/ecleStay_Backend/webBackend/' . $image['service_image']);
+                    $image['service_image'] = Yii::$app->params['imageLink'] . '/' . $image['service_image'];
                 }
             }
             if (isset($service['hosts']) && is_array($service['hosts'])) {
-                $service['hosts']['picture'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['hosts']['picture'];
+                $service['hosts']['picture'] =  Yii::$app->params['imageLink'] . '/'. $service['hosts']['picture'];
                 $service['hosts']['business_doc'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['hosts']['business_doc'];
                 $service['hosts']['hostReviews'] = Yii::$app->runAction('hoster/hostreviews', ['id' => $service['hosts']['host_id']]);
 
             }
             if (isset($service['county']) && is_array($service['county'])) {
-                $service['county']['county_url'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['county']['county_url'];
+                $service['county']['county_url'] = Yii::$app->params['imageLink'] . '/' . $service['county']['county_url'];
             }
         }
         if ($services) {
@@ -145,17 +150,17 @@ class ServicesController extends BaseController
             if (isset($service['images']) && is_array($service['images'])) {
                 foreach ($service['images'] as &$image) {
 //                   $image['service_image'] = '/var/www/html/ecleStay_Backend/webBackend/' . $image['service_image'];
-                    $image['service_image'] = Yii::$app->urlManager->createAbsoluteUrl($image['service_image']);
+                    $image['service_image'] =Yii::$app->params['imageLink'] . '/' . $image['service_image'];
                 }
             }
             if (isset($service['hosts']) && is_array($service['hosts'])) {
-                $service['hosts']['picture'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['hosts']['picture'];
+                $service['hosts']['picture'] = Yii::$app->params['imageLink'] . '/' . $service['hosts']['picture'];
                 $service['hosts']['business_doc'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['hosts']['business_doc'];
                 $service['hosts']['hostReviews'] = Yii::$app->runAction('hoster/hostreviews', ['id' => $service['hosts']['host_id']]);
 
             }
             if (isset($service['county']) && is_array($service['county'])) {
-                $service['county']['county_url'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['county']['county_url'];
+                $service['county']['county_url'] = Yii::$app->params['imageLink'] . '/' . $service['county']['county_url'];
             }
         }
 
