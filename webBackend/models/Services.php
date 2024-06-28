@@ -80,14 +80,14 @@ class Services extends ActiveRecord
         return $fields;
     }
 
-//    public function extraFields()
-//    {
-//        return [
-//            'serviceReviews' => function () {
-//                // Fetch service reviews and return them
-//                return Yii::$app->runAction('servicer/servicereviews', ['id' => $this->service_id]);
-//            },
-//        ];
-//    }
+    public function extraFields()
+    {
+        return [
+            'serviceReviews' => function () {
+                // Fetch service reviews and return them
+                return Yii::$app->runAction('servicer/servicereviews', ['id' => $this->service_id]);
+            },
+        ];
+    }
 }
 

@@ -72,30 +72,30 @@ class CategoriesController extends BaseController
                     }
                 }
                 if (isset($service['hosts'])) {
+                    // Ensure the base URL is prepended only once for picture
+                    if (strpos($service['hosts']['picture'], Yii::$app->params['imageLink']) === false) {
+                        $service['hosts']['picture'] = Yii::$app->params['imageLink'] . '/' . $service['hosts']['picture'];
+                    }
 
-//                    $service['hosts']->hostReviews = "";
-//                    $service['hosts']['picture'] =  $service['hosts']['picture'];
-                    $service['hosts']->picture =  'john' . '/'. $service['hosts']['picture'];
-                    var_dump($service['hosts']['picture']);
                     $service['hosts']['business_doc'] = [];
                     $service['hosts']['business_name'] = [];
-//                    $service['hosts']->hostReviews = Yii::$app->runAction('hoster/hostreviews', ['id' => $service['hosts']['host_id']]);
-
                 }
                 if (isset($service['county'])) {
-//                    $service['county']['county_url'] = Yii::$app->params['imageLink'] . '/' . $service['county']['county_url'];
+                    // Ensure the base URL is prepended only once for county_url
+                    if (strpos($service['county']['county_url'], Yii::$app->params['imageLink']) === false) {
+                        $service['county']['county_url'] = Yii::$app->params['imageLink'] . '/' . $service['county']['county_url'];
+                    }
                 }
             }
             return [
                 'status' => 200,
                 'message' => 'Services By Category Retrieved Successfully',
-                $services
-//                'data' => array_map(function($service) {
-//                    $serviceData = $service->toArray([], ['serviceReviews']); // Request extra field 'serviceReviews'
-//                    $hostData = $service->hosts->toArray([], ['hostReviews']); // Include extra fields for host
-//                    $serviceData['hosts'] = $hostData;
-//                    return $serviceData;
-//                }, $services),
+                'data' => array_map(function($service) {
+                    $serviceData = $service->toArray([], ['serviceReviews']); // Request extra field 'serviceReviews'
+                    $hostData = $service->hosts->toArray([], ['hostReviews']); // Include extra fields for host
+                    $serviceData['hosts'] = $hostData;
+                    return $serviceData;
+                }, $services),
             ];
         } else {
             throw new NotFoundHttpException("Services of the category $categoryName not found");
