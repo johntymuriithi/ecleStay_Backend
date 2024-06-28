@@ -61,7 +61,11 @@ class HosterController extends BaseController {
         $offset = ($page - 1) * $limit;
 
         $reviews = Hoster::find()->where(['host_id' => $id])->limit($limit)->offset($offset)->all();
+        if (!$reviews)
+            return [];
         $totalReviews = [];
+
+        $averageRating = (int)Hoster::find()->average('rating');
 
         foreach ($reviews as $review) {
             $user = User::findOne(['id' => $review->user_id]);
@@ -83,7 +87,7 @@ class HosterController extends BaseController {
             }
         }
 
-        return $totalReviews;
+        return ['averageRating' => $averageRating, 'totalReviews' => count($totalReviews), "reviews" => $totalReviews];
     }
 
     private function helperDate($timestamp)

@@ -38,6 +38,7 @@ class ServicesController extends BaseController
 //                    var_dump($model->imageFiles);
 //                    var_dump($model->getErrors());
 //                }
+//                echo 'yo';
 //                var_dump($model->validate());exit;
                 if (Yii::$app->request->isPost && $model->validate()) {
                     foreach ($model->imageFiles as $file) {
@@ -87,7 +88,8 @@ class ServicesController extends BaseController
                 return ['status' => 'success', 'message' => 'Service Added Successfully'];
             } else {
                 // If saving service fails, throw an exception
-                throw new \Exception('Failed to save service');
+                Yii::error("Service failed to save. Validation errors: " . json_encode($service->getErrors()), __METHOD__);
+                throw new \Exception('Failed to save service yo');
             }
         } catch (\Exception $e) {
             // Roll back the transaction in case of an error
@@ -118,6 +120,9 @@ class ServicesController extends BaseController
             if (isset($service['county']) && is_array($service['county'])) {
                 $service['county']['county_url'] = Yii::$app->params['imageLink'] . '/' . $service['county']['county_url'];
             }
+
+            $service['serviceReviews'] = Yii::$app->runAction('servicer/servicereviews', ['id' => $service['service_id']]);
+
         }
         if ($services) {
             return [
@@ -162,6 +167,8 @@ class ServicesController extends BaseController
             if (isset($service['county']) && is_array($service['county'])) {
                 $service['county']['county_url'] = Yii::$app->params['imageLink'] . '/' . $service['county']['county_url'];
             }
+
+            $service['serviceReviews'] = Yii::$app->runAction('servicer/servicereviews', ['id' => $service['service_id']]);
         }
 
         if ($services) {

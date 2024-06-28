@@ -15,7 +15,7 @@ class Services extends ActiveRecord
     public function rules()
     {
         return [
-            [['price', 'pricing_criteria', 'description', 'type_id', 'host_id', 'start_date', 'end_date', 'county_id', 'service_name', 'bedroom', 'cancellation_policy', 'bath', 'guests', 'beds'], 'required'],
+            [['price', 'pricing_criteria', 'description', 'type_id', 'host_id', 'start_date', 'end_date', 'county_id', 'service_name',], 'required'],
             [['price', 'host_id', 'type_id', 'county_id'], 'integer'],
             [['pricing_criteria'], 'string', 'max' => 50],
             [['description'], 'string', 'max' => 500],
@@ -57,15 +57,6 @@ class Services extends ActiveRecord
     public function fields()
     {
         $fields = parent::fields();
-
-        // Explicitly include the related fields
-//        foreach ($service as &$service) {
-//            if (isset($service['images']) && is_array($service['images'])) {
-//                foreach ($service['images'] as &$image) {
-//                    $image['service_image'] = '/var/www/html/ecleStay_Backend/webBackend/' . $image['service_image'];
-//                }
-//            }
-//        }
         $fields['images'] = function () {
            return  $this->images;
         };
@@ -74,7 +65,6 @@ class Services extends ActiveRecord
             return $this->county;
         };
         $fields['hosts'] = function () {
-            $this->hosts->picture =  'John';
             return $this->hosts;
         };
         $fields['types'] = function () {
@@ -89,5 +79,15 @@ class Services extends ActiveRecord
         };
         return $fields;
     }
+
+//    public function extraFields()
+//    {
+//        return [
+//            'serviceReviews' => function () {
+//                // Fetch service reviews and return them
+//                return Yii::$app->runAction('servicer/servicereviews', ['id' => $this->service_id]);
+//            },
+//        ];
+//    }
 }
 

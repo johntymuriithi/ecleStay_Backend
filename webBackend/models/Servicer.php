@@ -15,7 +15,7 @@ class Servicer extends ActiveRecord
     public function rules()
     {
         return [
-            [['service_id', 'order_id', 'description', 'rating', 'cleanliness', 'location', 'communication', 'days_stayed'], 'required'],
+            [['service_id', 'description', 'rating', 'cleanliness', 'location', 'communication', 'days_stayed', 'user_id'], 'required'],
         ];
     }
 

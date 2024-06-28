@@ -59,21 +59,47 @@ class CategoriesController extends BaseController
         // Find services belonging to the category
         $services = Services::find()
             ->joinWith(['types' => function ($query) use ($category) {
-                $query
-                    ->where(['types.category' => $category->category_id]);
+                $query->where(['types.category' => $category->category_id]);
             }])
-            ->with(['hosts'])
+            ->with(['hosts', 'county', 'images']) // Eager load related models
             ->all();
         if ($services) {
+            foreach ($services as &$service) {
+                if (isset($service['images']) && is_array($service['images'])) {
+                    $test = $service['images'];
+                    foreach ($test as &$image) {
+                        $image['service_image'] = Yii::$app->params['imageLink'] . '/' . $image['service_image'];
+                    }
+                }
+                if (isset($service['hosts'])) {
+
+//                    $service['hosts']->hostReviews = "";
+//                    $service['hosts']['picture'] =  $service['hosts']['picture'];
+                    $service['hosts']->picture =  'john' . '/'. $service['hosts']['picture'];
+                    var_dump($service['hosts']['picture']);
+                    $service['hosts']['business_doc'] = [];
+                    $service['hosts']['business_name'] = [];
+//                    $service['hosts']->hostReviews = Yii::$app->runAction('hoster/hostreviews', ['id' => $service['hosts']['host_id']]);
+
+                }
+                if (isset($service['county'])) {
+//                    $service['county']['county_url'] = Yii::$app->params['imageLink'] . '/' . $service['county']['county_url'];
+                }
+            }
             return [
                 'status' => 200,
-                'data' => [$categoryName . 's' => $services],
-                'message' => 'Services By Category Retrived Successfully',
+                'message' => 'Services By Category Retrieved Successfully',
+                $services
+//                'data' => array_map(function($service) {
+//                    $serviceData = $service->toArray([], ['serviceReviews']); // Request extra field 'serviceReviews'
+//                    $hostData = $service->hosts->toArray([], ['hostReviews']); // Include extra fields for host
+//                    $serviceData['hosts'] = $hostData;
+//                    return $serviceData;
+//                }, $services),
             ];
         } else {
             throw new NotFoundHttpException("Services of the category $categoryName not found");
         }
-//        $response = [];
 
 //        foreach ($services as $service) {
 //            $response[] = [

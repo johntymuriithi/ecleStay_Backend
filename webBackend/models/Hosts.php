@@ -47,6 +47,15 @@ class Hosts extends ActiveRecord
             'picture' => $imageUrl,
         ])->execute();
     }
+//    public function extraFields()
+//    {
+//        return [
+//            'hostReviews' => function () {
+//                // Fetch host reviews and return them
+//                return Yii::$app->runAction('hoster/hostreviews', ['id' => $this->host_id]);
+//            },
+//        ];
+//    }
 //
 //    public function attributeLabels()
 //    {
