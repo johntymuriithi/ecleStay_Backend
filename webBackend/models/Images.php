@@ -20,7 +20,7 @@ class Images extends ActiveRecord
     public function rules()
     {
         return [
-            [['imageFiles'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, webp', 'maxFiles' => 5, 'maxSize' => 80 * 1024 * 1024, 'tooBig' => 'File size limit exceeded. Maximum allowed size is 80MB.', 'message' => 'Please upload a file.'],
+            [['imageFiles'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, webp, jpeg', 'maxFiles' => 5, 'maxSize' => 80 * 1024 * 1024, 'tooBig' => 'File size limit exceeded. Maximum allowed size is 80MB.', 'message' => 'Please upload a file.'],
             [['service_image'], 'string'], // Assuming file_path is stored as a string
         ];
 //        return [

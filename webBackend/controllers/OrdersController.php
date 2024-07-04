@@ -3,6 +3,7 @@ namespace app\controllers;
 
 use app\models\Orders;
 use Yii;
+use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 use yii\web\NotFoundHttpException;
@@ -36,7 +37,7 @@ class OrdersController extends BaseController
         if ($orders->load($params, '') && $orders->save()) {
             return ["status" => 200 . " " . 'OK', 'message' => "Order placed Successfully"];
         } else {
-            throw new ForbiddenHttpException("Order placement failed");
+            throw new BadRequestHttpException("Order placement Failed");
         }
     }
 

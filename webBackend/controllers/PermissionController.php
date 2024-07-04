@@ -12,7 +12,7 @@ class PermissionController extends BaseController
 {
     public $modelClass = 'app\models\Services';
 
-    public function actionAssignhost($userId)
+    public function actionAsignhost($userId)
     {
         $user = User::findOne(['id' => $userId]);
         if (!$user) {

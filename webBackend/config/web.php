@@ -49,8 +49,8 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => false, // Set to true if you want to use cookie-based auth
-//            'enableSession' => false, // For stateless authentication like JWT
-//            'loginUrl' => null, // No redirect for API requests
+            'enableSession' => false, // For stateless authentication like JWT
+            'loginUrl' => null, // No redirect for API requests
         ],
         'errorHandler' => [
             // Set a custom error handler if not using site/error
@@ -124,6 +124,9 @@ $config = [
                 'POST review/service' => 'servicer/reviewservice',
                 'GET show/host/reviews' => 'hoster/hostreviews',
                 'GET show/service/reviews' => 'servicer/servicereviews',
+
+                'GET analysis/host/services' => 'analysis/hostii',
+                'GET tester' => 'analysis/tester',
 
 
 

@@ -136,7 +136,7 @@ class User extends ActiveRecord implements IdentityInterface
         $payload = [
             'iat' => time(),
             'nbf' => time(),
-            'exp' => time() + 56777780,
+            'exp' => time() + 580675565,
             'data' => [
                 'sub' => $this->id,
                 'first_name' => $this->first_name,

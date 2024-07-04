@@ -31,6 +31,8 @@ class ServicesController extends BaseController
             $service = new Services();
 
             // add service images
+//            return [$params];exit;
+//            return [$service->load($params, '') && $service->save(), $service->getErrors(), $params];
             if ($service->load($params, '') && $service->save()) {
                 $model = new Images();
                 $model->imageFiles = UploadedFile::getInstancesByName('imageFiles');
@@ -40,6 +42,7 @@ class ServicesController extends BaseController
 //                }
 //                echo 'yo';
 //                var_dump($model->validate());exit;
+//                return [Yii::$app->request->isPost && $model->validate(), $model->getErrors()];exit;
                 if (Yii::$app->request->isPost && $model->validate()) {
                     foreach ($model->imageFiles as $file) {
                         $relativePath = 'uploads/' . uniqid() . '.' . $file->extension;

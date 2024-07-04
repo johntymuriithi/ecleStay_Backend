@@ -42,7 +42,7 @@ class ServicerController extends BaseController {
             ->andWhere(['user_id' => $userId])
             ->one();
         if ($servicer) {
-            throw  new ForbiddenHttpException("Already reviewed this Host, please Edit your review Only Or leave it alone");
+            throw  new ForbiddenHttpException("Already reviewed this Service, please Edit your review Only Or leave it alone");
         }
 
         $review = new Servicer();
@@ -51,7 +51,7 @@ class ServicerController extends BaseController {
             return ["status" => 200, "message" => "Service Review Was Successful"];
         } else {
             var_dump($review->getErrors());
-//            throw new BadRequestHttpException("Failed to save Review, please try again");
+            throw new BadRequestHttpException("Failed to save Review, please try again");
         }
     }
 

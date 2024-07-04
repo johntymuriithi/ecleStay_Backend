@@ -31,10 +31,14 @@ class TypesController extends BaseController
         $params = \Yii::$app->request->bodyParams;
         $type = new Types();
 
+        $type->load($params, '');
+        $type->save();
+
+        return ["reasons why not saving" => $type->getErrors()];
         if ($type->load($params, '') && $type->save()) {
             return "Type Added Successfully";
         } else {
-            throw new ForbiddenHttpException("You are very much Forbidden from this Action");
+            throw new ForbiddenHttpException("Saving Type failed,,please try again later");
         }
 
     }

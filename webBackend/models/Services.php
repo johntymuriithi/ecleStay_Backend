@@ -15,11 +15,16 @@ class Services extends ActiveRecord
     public function rules()
     {
         return [
-            [['price', 'pricing_criteria', 'description', 'type_id', 'host_id', 'start_date', 'end_date', 'county_id', 'service_name',], 'required'],
+            [['price', 'pricing_criteria', 'description', 'type_id', 'host_id', 'start_date', 'end_date', 'county_id', 'service_name'], 'required'],
             [['price', 'host_id', 'type_id', 'county_id'], 'integer'],
             [['pricing_criteria'], 'string', 'max' => 50],
             [['description'], 'string', 'max' => 500],
             [['approved'], 'boolean'],
+            [['guests'], 'integer'],
+            [['beds'], 'integer'],
+            [['bedroom'], 'integer'],
+            [['bath'], 'integer'],
+            [['cancellation_policy'], 'string'],
         ];
     }
 

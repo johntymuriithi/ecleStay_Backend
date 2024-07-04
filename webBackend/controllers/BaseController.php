@@ -37,9 +37,9 @@ class BaseController extends ActiveController
         //        // JWT Authentication (placed after access control) // incase it fails,,please login 401
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::class,
-            'except' => ['login', 'signup', 'viewservice', 'showcategories', 'addcategory',
-                'getaccommodations', 'searchtype', 'showtypes', 'addtypes', 'addhosts', 'showhosts',
-                'showcounties', 'getservices', 'resetpasswordlink', 'resetpassword', 'hostreviews', 'addcounty', 'servicereviews'], // Actions that don't require authentication
+            'except' => ['login', 'signup', 'viewservice', 'showcategories', 'addcategory', 'servicereviews',
+                'getaccommodations', 'searchtype', 'showtypes', 'addhosts', 'hostreviews',
+                'showcounties', 'getservices', 'resetpasswordlink', 'resetpassword', 'hostreviews', 'addcounty',], // Actions that don't require authentication
         ];
         $behaviors['access'] = [
             'class' => AccessControl::class,
@@ -48,23 +48,24 @@ class BaseController extends ActiveController
                     'allow' => true,
                     'actions' => ['login', 'signup', 'getservices', 'viewservice',
                         'showcategories', 'addcategory', 'getaccommodations', 'searchtype',
-                        'showtypes', 'addtypes', 'addhosts', 'showhosts', 'showcounties', 'resetpasswordlink',
-                        'resetpassword', 'hostreviews', 'addcounty', 'servicereviews'],
+                        'showtypes', 'addhosts', 'showcounties', 'resetpasswordlink',
+                        'resetpassword', 'hostreviews', 'addcounty', 'servicereviews',],
                     'roles' => ['?'], // Allow guests (unauthenticated users) // in short in mean users
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['showtypes', 'ordernow', 'addhosts', 'toa', 'showcategories', 'reviewhost', 'addservice', 'hostrevews', 'reviewservice', 'showorders'],
+                    'actions' => ['showtypes', 'ordernow', 'addhosts', 'toa', 'showcategories', 'reviewhost',
+                        'addservice', 'hostrevews', 'reviewservice', 'showorders', 'servicereviews', 'hostreviews'],
                     'roles' => ['@'], // authenticated users only // passed the bearer auth
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['showhosts', 'showcounties', 'addcounty', 'addtypes', 'addservice', 'getaccommodations', 'reviewhost'],
+                    'actions' => ['showhosts', 'showcounties', 'addcounty', 'addtypes', 'addservice', 'getaccommodations', 'reviewhost', 'hostii',],
                     'roles' => ['admin'], // Require admin role
                 ],
                 [
                     'allow' => true,
-                    'actions' => [''],
+                    'actions' => ['hostii', 'tester'],
                     'roles' => ['host'], // Require user role
                 ],
             ],
