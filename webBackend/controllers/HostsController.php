@@ -3,6 +3,7 @@ namespace app\controllers;
 
 use app\models\Hosts;
 use app\models\Types;
+use app\models\User;
 use Yii;
 use yii\rest\ActiveController;
 use app\models\County;
@@ -44,6 +45,18 @@ class HostsController extends BaseController
         $host->number = Yii::$app->request->post('number');
         $host->county_id = Yii::$app->request->post('location');
 
+        $user = User::findOne(['email' => $host->email]);
+        if (!$user) {
+            throw new ForbiddenHttpException("Please Sign Up first with this email > $host->email < to Access this Action");
+        }
+        $user = $host::findOne(['email' => $host->email]);
+        if ($user) {
+            throw new ForbiddenHttpException("Hosts with that Email already Exists");
+        }
+        $user = $host::findOne(['number' => $host->number]);
+        if ($user) {
+            throw new ForbiddenHttpException("Hosts with that Number already Exists");
+        }
         // Get uploaded file
         $host->imageFile = UploadedFile::getInstanceByName('imageFile');
         $host->businessFile = UploadedFile::getInstanceByName('businessFile');

@@ -308,9 +308,30 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
 
     public function actionUserstotal() {
         Yii::$app->response->format = Response::FORMAT_JSON;
-        $total = User::find()->count();
 
-        return ["users" => $total];
+        $users = User::find()->all();
+        $total = [];
+        if ($users) {
+            foreach ($users as $user) {
+                $reviewData = [
+                    'host_id' => $user->id,
+                    'user_name' => $user->first_name . " " . $user->second_name,
+                    'roles' => $this->helper($user->id)
+                ];
+
+                $total[] = $reviewData;
+            }
+        } else {
+            throw new NotFoundHttpException("No Users  Found, Try again later");
+        }
+
+        return ["status" => 200, "message" => "Users retrived succcesifully", "totalUsers" => count($total), "users" => $total];
+    }
+
+    public function helper ($id) {
+        // Get the authManager component
+        $roles = Yii::$app->authManager->getRolesByUser($id);
+        return array_keys($roles);
     }
 
 }

@@ -34,7 +34,7 @@ class TypesController extends BaseController
         $type->load($params, '');
         $type->save();
 
-        return ["reasons why not saving" => $type->getErrors()];
+//        return ["reasons why not saving" => $type->getErrors()];
         if ($type->load($params, '') && $type->save()) {
             return "Type Added Successfully";
         } else {

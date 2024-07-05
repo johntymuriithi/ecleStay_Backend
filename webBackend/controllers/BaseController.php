@@ -49,7 +49,7 @@ class BaseController extends ActiveController
                     'actions' => ['login', 'signup', 'getservices', 'viewservice',
                         'showcategories', 'addcategory', 'getaccommodations', 'searchtype',
                         'showtypes', 'addhosts', 'showcounties', 'resetpasswordlink',
-                        'resetpassword', 'hostreviews', 'addcounty', 'servicereviews',],
+                        'resetpassword', 'hostreviews', 'addcounty', 'servicereviews', ],
                     'roles' => ['?'], // Allow guests (unauthenticated users) // in short in mean users
                 ],
                 [
@@ -60,7 +60,9 @@ class BaseController extends ActiveController
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['showhosts', 'showcounties', 'addcounty', 'addtypes', 'addservice', 'getaccommodations', 'reviewhost', 'hostii',],
+                    'actions' => ['showhosts', 'showcounties', 'addcounty', 'addtypes',
+                        'addservice', 'getaccommodations', 'reviewhost', 'hostii',
+                        'rolerevoker', 'assignadmin', 'assignhost', 'approvedhosts', 'waitinghosts', "userstotal"],
                     'roles' => ['admin'], // Require admin role
                 ],
                 [

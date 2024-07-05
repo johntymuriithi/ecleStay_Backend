@@ -72,9 +72,55 @@ class AnalysisController extends BaseController
         }
     }
 
-    public function actionTester()
+    public function actionApprovedhosts()
     {
-        return "Bra Bra";
+        $total = [];
+        $hosts = Hosts::findAll(['approved' => 'true']);
+
+        if ($hosts) {
+            foreach ($hosts as $host) {
+                $user = User::findOne(['email' => $host->email]);
+                $reviewData = [
+                    'host_id' => $host->host_id,
+                    'host_name' => $host->host_name,
+                    'roles' => $this->helper($user->id)
+                ];
+
+                $total[] = $reviewData;
+            }
+        } else {
+            throw new NotFoundHttpException("No approved Hosts Found, Try again later");
+        }
+
+        return ["status" => 200, "message" => "Approved Host retrived succcesifully", "hosts" => $total];
+    }
+
+    public function actionWaitinghosts()
+    {
+        $total = [];
+        $hosts = Hosts::findAll(['approved' => 'false']);
+
+        if ($hosts) {
+            foreach ($hosts as $host) {
+                $user = User::findOne(['email' => $host->email]);
+                $reviewData = [
+                    'host_id' => $host->host_id,
+                    'host_name' => $host->host_name,
+                ];
+
+                $total[] = $reviewData;
+            }
+        } else {
+            throw new NotFoundHttpException("Every Hosts has been Approved. Thank you");
+        }
+
+        return ["status" => 200, "message" => "Waiting for Approval Host retrived succcesifully", "hosts" => $total];
+    }
+
+    public function helper ($id) {
+        // Get the authManager component
+        $roles = Yii::$app->authManager->getRolesByUser($id);
+        return array_keys($roles);
     }
 }
 

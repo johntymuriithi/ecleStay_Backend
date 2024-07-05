@@ -126,6 +126,9 @@ $config = [
                 'GET show/service/reviews' => 'servicer/servicereviews',
 
                 'GET analysis/host/services' => 'analysis/hostii',
+                'GET analysis/host/approved' => 'analysis/approvedhosts',
+                'GET analysis/host/waiting' => 'analysis/waitinghosts',
+
                 'GET tester' => 'analysis/tester',
 
 
