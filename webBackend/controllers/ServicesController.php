@@ -185,6 +185,54 @@ class ServicesController extends BaseController
             throw new NotFoundHttpException("Service not found");
         }
     }
+
+    public function actionSearchcounty($id) {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        if (!Services::findOne(['county_id' => $id]))
+            throw new NotFoundHttpException("The Service was not Found");
+        // Find the service by ID, including related images and county
+        $services = Services::find()
+            ->with('images', 'county', 'hosts', 'roles', 'amenities')
+            ->where(['county_id' => $id])
+            ->asArray() // Convert the result to an array
+            ->one();
+
+        $services = array($services); // wow,,I can do it yoh!!!!
+
+        // Check if the service was found
+
+        foreach ($services as &$service) {
+            if (isset($service['images']) && is_array($service['images'])) {
+                foreach ($service['images'] as &$image) {
+//                   $image['service_image'] = '/var/www/html/ecleStay_Backend/webBackend/' . $image['service_image'];
+                    $image['service_image'] =Yii::$app->params['imageLink'] . '/' . $image['service_image'];
+                }
+            }
+            if (isset($service['hosts']) && is_array($service['hosts'])) {
+                $service['hosts']['picture'] = Yii::$app->params['imageLink'] . '/' . $service['hosts']['picture'];
+                $service['hosts']['business_doc'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['hosts']['business_doc'];
+                $service['hosts']['hostReviews'] = Yii::$app->runAction('hoster/hostreviews', ['id' => $service['hosts']['host_id']]);
+
+            }
+            if (isset($service['county']) && is_array($service['county'])) {
+                $service['county']['county_url'] = Yii::$app->params['imageLink'] . '/' . $service['county']['county_url'];
+            }
+
+            $service['serviceReviews'] = Yii::$app->runAction('servicer/servicereviews', ['id' => $service['service_id']]);
+        }
+
+        if ($services) {
+            return [
+                'status' => 200,
+                'message' => 'Service Retrived Successfully',
+                'data' => ['Service' => $services],
+            ];
+        } else {
+            // Throw an exception if the service was not found
+            throw new NotFoundHttpException("County not found");
+        }
+    }
 }
 
 ?>

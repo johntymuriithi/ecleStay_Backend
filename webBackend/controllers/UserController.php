@@ -153,7 +153,7 @@ class UserController extends BaseController
         }
     }
 
-    // helper for signup, doing some staffy staffy here
+    // helper for signup, doing some staffy here
     public static function getSome($email) {
         $user = User::findOne(['email' => $email]);
         return $user['id'];
@@ -316,6 +316,7 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
                 $reviewData = [
                     'host_id' => $user->id,
                     'user_name' => $user->first_name . " " . $user->second_name,
+                    "email" => $user->email,
                     'roles' => $this->helper($user->id)
                 ];
 

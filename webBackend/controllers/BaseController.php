@@ -39,7 +39,7 @@ class BaseController extends ActiveController
             'class' => HttpBearerAuth::class,
             'except' => ['login', 'signup', 'viewservice', 'showcategories', 'addcategory', 'servicereviews',
                 'getaccommodations', 'searchtype', 'showtypes', 'addhosts', 'hostreviews',
-                'showcounties', 'getservices', 'resetpasswordlink', 'resetpassword', 'hostreviews', 'addcounty',], // Actions that don't require authentication
+                'showcounties', 'getservices', 'resetpasswordlink', 'resetpassword', 'hostreviews', 'addcounty', 'searchcounty'], // Actions that don't require authentication
         ];
         $behaviors['access'] = [
             'class' => AccessControl::class,
@@ -49,7 +49,7 @@ class BaseController extends ActiveController
                     'actions' => ['login', 'signup', 'getservices', 'viewservice',
                         'showcategories', 'addcategory', 'getaccommodations', 'searchtype',
                         'showtypes', 'addhosts', 'showcounties', 'resetpasswordlink',
-                        'resetpassword', 'hostreviews', 'addcounty', 'servicereviews', ],
+                        'resetpassword', 'hostreviews', 'addcounty', 'servicereviews', 'searchcounty'],
                     'roles' => ['?'], // Allow guests (unauthenticated users) // in short in mean users
                 ],
                 [
@@ -61,7 +61,7 @@ class BaseController extends ActiveController
                 [
                     'allow' => true,
                     'actions' => ['showhosts', 'showcounties', 'addcounty', 'addtypes',
-                        'addservice', 'getaccommodations', 'reviewhost', 'hostii',
+                        'addservice', 'getaccommodations', 'reviewhost', 'hostii', 'userguest',
                         'rolerevoker', 'assignadmin', 'assignhost', 'approvedhosts', 'waitinghosts', "userstotal"],
                     'roles' => ['admin'], // Require admin role
                 ],

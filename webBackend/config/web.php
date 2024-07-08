@@ -83,7 +83,7 @@ $config = [
             'enablePrettyUrl' => true,
             'enableStrictParsing' => true,
             'showScriptName' => false,
-            'hostInfo' => 'https://d147-41-90-101-26.ngrok-free.app', // very important
+            'hostInfo' => 'https://d147-41-90-101-26.ngrok-free.app', // very important for frontend
             'rules' => [
                 'POST user/signup' => 'user/signup',
                 'POST user/login' => 'user/login',
@@ -109,13 +109,14 @@ $config = [
 
                 'GET show/services' => 'services/getservices',
                 'GET view/service' => 'services/viewservice',
+                'GET searchBy/county' => 'services/searchcounty',
 
                 'GET get/orders' => 'orders/showorders',
                 'POST place/order' => 'orders/ordernow',
+                'GET get/active/users/guest' => 'orders/userguest',
 
                 'POST auth/permit/host' => 'permission/assignhost',
                 'POST auth/permit/admin' => 'permission/assignadmin',
-
                 'POST auth/revoke/role' => 'permission/rolerevoker',
 
                 'POST add/imager' => 'images/uploadimage',

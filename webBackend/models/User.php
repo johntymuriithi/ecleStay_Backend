@@ -210,6 +210,12 @@ class User extends ActiveRecord implements IdentityInterface
             'login_trials' => 0,
         ])->execute();
     }
+
+    public function getOrders()
+    {
+        return $this->hasMany(Orders::class, ['user_id' => 'id']);
+    }
+
 }
 
 ?>

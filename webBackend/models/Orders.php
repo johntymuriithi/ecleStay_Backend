@@ -18,4 +18,10 @@ class Orders extends ActiveRecord
             // please valid rules later and don't fail to do so
         ];
     }
+
+    public function getUser()
+    {
+        return $this->hasOne(Services::class, ['user_id' => 'id']);
+    }
+
 }
