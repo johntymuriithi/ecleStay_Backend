@@ -133,12 +133,21 @@ class User extends ActiveRecord implements IdentityInterface
         $key = Yii::$app->params['jwtSecretKey'];
         $roles = Yii::$app->authManager->getRolesByUser($this->id); // Get roles for the user
 
+        $host = Hosts::find()
+            ->where(['email' => $this->email])
+            ->andWhere(['approved' => 'true'])
+            ->one();
+
+        $host_id = $host ? $host->host_id : [];
+
+
         $payload = [
             'iat' => time(),
             'nbf' => time(),
             'exp' => time() + 580675565,
             'data' => [
                 'sub' => $this->id,
+                "hostId" => $host_id,
                 'first_name' => $this->first_name,
                 'second_name' => $this->second_name,
                 'phone' => $this->phone,

@@ -82,6 +82,7 @@ class AnalysisController extends BaseController
                 $user = User::findOne(['email' => $host->email]);
                 $reviewData = [
                     'host_id' => $host->host_id,
+                    'user_id' => $user->id,
                     'host_name' => $host->host_name,
                     'roles' => $this->helper($user->id)
                 ];
@@ -105,6 +106,7 @@ class AnalysisController extends BaseController
                 $user = User::findOne(['email' => $host->email]);
                 $reviewData = [
                     'host_id' => $host->host_id,
+                    'user_id' => $user->id,
                     'host_name' => $host->host_name,
                 ];
 

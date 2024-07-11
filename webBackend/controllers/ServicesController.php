@@ -31,7 +31,7 @@ class ServicesController extends BaseController
             $service = new Services();
 
             // add service images
-//            return [$params];exit;
+
 //            return [$service->load($params, '') && $service->save(), $service->getErrors(), $params];
             if ($service->load($params, '') && $service->save()) {
                 $model = new Images();
@@ -42,7 +42,7 @@ class ServicesController extends BaseController
 //                }
 //                echo 'yo';
 //                var_dump($model->validate());exit;
-//                return [Yii::$app->request->isPost && $model->validate(), $model->getErrors()];exit;
+//                return [Yii::$app->request->isPost && $model->validate(), $model->getErrors(), $model->imageFiles, $params];exit;
                 if (Yii::$app->request->isPost && $model->validate()) {
                     foreach ($model->imageFiles as $file) {
                         $relativePath = 'uploads/' . uniqid() . '.' . $file->extension;
@@ -62,7 +62,8 @@ class ServicesController extends BaseController
 //                    return ['status' => 200, 'message' => 'Service Images Saved Successfully to the database'];
 
                 } else {
-                    var_dump("Validation failed: " . json_encode($model->getErrors()));
+//                    var_dump("Validation failed: " . json_encode($model->getErrors()));
+//                    return ["message" => "Here", $model->imageFiles];
                     throw new BadRequestHttpException("Validation of Service Images Failed, Please try again later");
                 }
                 // add extra amenities
