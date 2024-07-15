@@ -33,6 +33,8 @@ class ServicerController extends BaseController {
             ->andWhere(['service_id' => $service_id])
             ->andWhere(['paid' => 'true'])
             ->one();
+
+
         if (!$user)
             throw new ForbiddenHttpException("Book or Pay First to be able to review"); // meaning has not stayed
 

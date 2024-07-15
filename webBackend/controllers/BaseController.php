@@ -55,7 +55,7 @@ class BaseController extends ActiveController
                 [
                     'allow' => true,
                     'actions' => ['showtypes', 'ordernow', 'addhosts', 'toa', 'showcategories', 'reviewhost',
-                        'addservice', 'hostrevews', 'reviewservice', 'showorders', 'servicereviews', 'hostreviews'],
+                        'addservice', 'hostrevews', 'reviewservice', 'showorders', 'servicereviews', 'hostreviews', 'guestservices'],
                     'roles' => ['@'], // authenticated users only // passed the bearer auth
                 ],
                 [

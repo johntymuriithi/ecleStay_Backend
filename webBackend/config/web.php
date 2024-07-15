@@ -114,6 +114,8 @@ $config = [
                 'GET get/orders' => 'orders/showorders',
                 'POST place/order' => 'orders/ordernow',
                 'GET get/active/users/guest' => 'orders/userguest',
+                'GET get/guest/bookings' => 'orders/guestservices',
+
 
                 'POST auth/permit/host' => 'permission/assignhost',
                 'POST auth/permit/admin' => 'permission/assignadmin',
