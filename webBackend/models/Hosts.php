@@ -56,21 +56,7 @@ class Hosts extends ActiveRecord
             },
         ];
     }
-//
-//    public function attributeLabels()
-//    {
-//        return [
-//            'host_id' => 'Host ID',
-//            'about' => 'About',
-//            'host_name' => 'Host Name',
-//            'language' => 'Language',
-//            'email' => 'Email',
-//            'number' => 'Number',
-//            'picture' => 'Picture',
-//            'county_id' => 'County',
-//            'approved' => 'Approved',
-//        ];
-//    }
+
 
     public function getServices()
     {
