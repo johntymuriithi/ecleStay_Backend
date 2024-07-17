@@ -94,6 +94,10 @@ $config = [
                 'POST add/type' => 'types/addtypes',
                 'GET show/hosts' => 'hosts/showhosts',
                 'POST add/host' => 'hosts/addhosts',
+
+                'GET show/guides' => 'guides/showguides',
+                'POST add/guide' => 'guides/addguides',
+
                 'POST add/service' => 'services/addservice',
 
                 'GET show/categories' => 'categories/showcategories',
@@ -119,6 +123,7 @@ $config = [
 
                 'POST auth/permit/host' => 'permission/assignhost',
                 'POST auth/permit/admin' => 'permission/assignadmin',
+                'POST auth/permit/guide' => 'permission/assignguide',
                 'POST auth/revoke/role' => 'permission/rolerevoker',
 
                 'POST add/imager' => 'images/uploadimage',

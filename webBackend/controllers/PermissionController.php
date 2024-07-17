@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Guides;
 use app\models\Hosts;
 use app\models\User;
 use Yii;
@@ -29,6 +30,7 @@ class PermissionController extends BaseController
 
         // Check if the user already has the 'host' role
         $auth = Yii::$app->authManager;
+//        var_dump($auth->getRole('tourGuide'));exit;
         if ($auth->getAssignment('host', $userId)) {
             throw new BadRequestHttpException("User already has the HOST role.");
         }
@@ -60,6 +62,56 @@ class PermissionController extends BaseController
         }
     }
 
+    public function actionAssignguide($userId)
+    {
+        // Find the user by ID
+        $user = User::findOne($userId);
+        if (!$user) {
+            throw new ForbiddenHttpException("User not found. Please sign up first.");
+        }
+
+        // Check if the user is registered as a host
+        $email = $user->email;
+        $guide = Guides::findOne(['email' => $email]);
+        if (!$guide) {
+            throw new ForbiddenHttpException("Guide record not found. Please register as a Guide.");
+        }
+
+        // Check if the user already has the 'host' role
+        $auth = Yii::$app->authManager;
+//        var_dump($auth->getRole('tourGuide'));exit;
+        if ($auth->getAssignment('tourGuide', $userId)) {
+            throw new BadRequestHttpException("User already has the Tour Guide role.");
+        }
+
+        // Assign the 'host' role to the user
+        $guideRole = $auth->getRole('tourGuide');
+        $auth->assign($guideRole, $userId);
+
+        // Update the 'approved' status using direct SQL
+        $updateCommand = Yii::$app->db->createCommand()
+            ->update('guides', ['approved' => true], ['email' => $email])
+            ->execute();
+
+        if ($updateCommand) {
+
+
+            Yii::$app->mailer->compose()
+                ->setFrom('ecleStay-no-reply@gmail.com')
+                ->setTo($guide->email)
+                ->setSubject('Tour Guide Request Approval')
+                ->setHtmlBody("<p>Hello {$guide->guide_name}, We are thrilled to inform you that you
+ have been accepted to become our partner. You are Officially a Tour Guide AT<h1>EcliStay</h1>. 
+ Please Log in to our Web App to find your Dashboard</p>")
+
+                ->send();
+            return ['status' => 200, 'message' => 'Role Tour Guide assigned and approved successfully.'];
+        } else {
+            return ['status' => 'error', 'message' => 'Failed to update Guide.'];
+        }
+    }
+
+
     public function actionAssignadmin($userId)
     {
         $user = User::findOne(['id' => $userId]);
@@ -80,8 +132,8 @@ class PermissionController extends BaseController
         Yii::$app->mailer->compose()
             ->setFrom('ecleStay-no-reply@gmail.com')
             ->setTo($user->email)
-            ->setSubject('Host Request Approval')
-            ->setHtmlBody("<p>Hello {$user->host_name}, We are thrilled to inform you that you
+            ->setSubject('Admin Request Approval')
+            ->setHtmlBody("<p>Hello {$user->first_name} {$user->second_name}, We are thrilled to inform you that you
  have been accepted to become our aDMIN. You are Officially a ADMIN AT<h1>EcliStay</h1>.</p>")
             ->send();
         return ["status" => 200, 'Message' => "Role ADMIN assigned successfully"];
