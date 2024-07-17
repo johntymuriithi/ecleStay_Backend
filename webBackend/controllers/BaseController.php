@@ -38,7 +38,7 @@ class BaseController extends ActiveController
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::class,
             'except' => ['login', 'signup', 'viewservice', 'showcategories', 'addcategory', 'servicereviews',
-                'getaccommodations', 'searchtype', 'showtypes', 'addhosts', 'hostreviews', 'addguides',
+                'getaccommodations', 'searchtype', 'showtypes', 'addhosts', 'hostreviews', 'addguides', 'guidebycounty',
                 'showcounties', 'getservices', 'resetpasswordlink', 'resetpassword', 'hostreviews', 'addcounty', 'searchcounty'], // Actions that don't require authentication
         ];
         $behaviors['access'] = [
@@ -49,7 +49,7 @@ class BaseController extends ActiveController
                     'actions' => ['login', 'signup', 'getservices', 'viewservice',
                         'showcategories', 'addcategory', 'getaccommodations', 'searchtype',
                         'showtypes', 'addhosts', 'addguides', 'showcounties', 'resetpasswordlink',
-                        'resetpassword', 'hostreviews', 'addcounty', 'servicereviews', 'searchcounty'],
+                        'resetpassword', 'hostreviews', 'addcounty', 'servicereviews', 'searchcounty', 'guidebycounty'],
                     'roles' => ['?'], // Allow guests (unauthenticated users) // in short in mean users
                 ],
                 [
@@ -62,7 +62,7 @@ class BaseController extends ActiveController
                     'allow' => true,
                     'actions' => ['showhosts', 'showcounties', 'addcounty', 'addtypes',
                         'addservice', 'getaccommodations', 'reviewhost', 'hostii', 'userguest',
-                        'rolerevoker', 'assignadmin', 'approvedhosts', 'waitinghosts', "userstotal", 'showguides', 'assignhost', 'assignguide'],
+                        'rolerevoker', 'assignadmin', 'approvedhosts', 'waitinghosts', "userstotal", 'showguides', 'assignhost', 'assignguide', 'approvedguides', 'waitingguides'],
                     'roles' => ['admin'], // Require admin role
                 ],
                 [

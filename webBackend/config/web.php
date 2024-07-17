@@ -136,6 +136,9 @@ $config = [
                 'GET analysis/host/services' => 'analysis/hostii',
                 'GET analysis/host/approved' => 'analysis/approvedhosts',
                 'GET analysis/host/waiting' => 'analysis/waitinghosts',
+                'GET analysis/guideByCounty' => 'analysis/guidebycounty',
+                'GET analysis/guides/approved' => 'analysis/approvedguides',
+                'GET analysis/guides/waiting' => 'analysis/waitingguides',
 
                 'GET tester' => 'analysis/tester',
 

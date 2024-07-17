@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Guides;
 use app\models\Hosts;
 use app\models\Services;
 use app\models\User;
@@ -117,6 +118,82 @@ class AnalysisController extends BaseController
         }
 
         return ["status" => 200, "message" => "Waiting for Approval Host retrived succcesifully", "hosts" => $total];
+    }
+
+    public function actionGuidebycounty($countyId) {
+        $guides = Guides::find()->where(['county_id' => $countyId])->andWhere(['approved' => 'true'])->all();
+        $totalGuides = [];
+
+        if(!$guides) {
+            throw new NotFoundHttpException("Guide on that county not available");
+        }
+
+        foreach ($guides as $guide) {
+            $gudi = [
+                "guide_id" => $guide->guide_id,
+                "about" => $guide->about,
+                "guide_name" => $guide->guide_name,
+                "language" => $guide->language,
+                "email" => $guide->email,
+                "number" => $guide->number,
+                "picture" => Yii::$app->params['imageLink'] . '/' . $guide->picture,
+            ];
+
+            $totalGuides = $gudi;
+        }
+
+        return ["status" => 200, "message" => "Guides retrived succcesifully", "Guides" => $totalGuides];
+
+
+
+    }
+
+    public function actionApprovedguides()
+    {
+        $total = [];
+        $guides = Guides::findAll(['approved' => 'true']);
+
+        if ($guides) {
+            foreach ($guides as $guide) {
+                $user = User::findOne(['email' => $guide->email]);
+                $reviewData = [
+                    'guide_id' => $guide->guide_id,
+                    'user_id' => $user->id,
+                    'guide_name' => $guide->guide_name,
+                    'roles' => $this->helper($user->id)
+                ];
+
+                $total[] = $reviewData;
+            }
+        } else {
+            throw new NotFoundHttpException("No approved Guides Found, Try again later");
+        }
+
+        return ["status" => 200, "message" => "Approved guides retrived succcesifully", "Guides" => $total];
+    }
+
+    public function actionWaitingguides()
+    {
+        $total = [];
+        $guides = Guides::findAll(['approved' => 'false']);
+
+        if ($guides) {
+            foreach ($guides as $guide) {
+                $user = User::findOne(['email' => $guide->email]);
+                $reviewData = [
+                    'guide_id' => $guide->guide_id,
+                    'user_id' => $user->id,
+                    'guide_name' => $guide->guide_name,
+                    'roles' => $this->helper($user->id)
+                ];
+
+                $total[] = $reviewData;
+            }
+        } else {
+            throw new NotFoundHttpException("Every Guides has been Approved. Thank you");
+        }
+
+        return ["status" => 200, "message" => "Waiting for Approval Guides retrived succcesifully", "Guides" => $total];
     }
 
     public function helper ($id) {
