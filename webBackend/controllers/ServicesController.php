@@ -6,6 +6,7 @@ use app\models\Images;
 use app\models\Roles;
 use app\models\Services;
 use app\models\Types;
+use DateTime;
 use yii\helpers\Url;
 use Yii;
 use yii\rest\ActiveController;
@@ -118,7 +119,9 @@ class ServicesController extends BaseController
             if (isset($service['hosts']) && is_array($service['hosts'])) {
                 $service['hosts']['picture'] =  Yii::$app->params['imageLink'] . '/'. $service['hosts']['picture'];
                 $service['hosts']['business_doc'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['hosts']['business_doc'];
+                $service['hosts']['created_at'] = $this->helperDate( $service['hosts']['created_at']);
                 $service['hosts']['hostReviews'] = Yii::$app->runAction('hoster/hostreviews', ['id' => $service['hosts']['host_id']]);
+
 
             }
             if (isset($service['county']) && is_array($service['county'])) {
@@ -165,6 +168,7 @@ class ServicesController extends BaseController
             if (isset($service['hosts']) && is_array($service['hosts'])) {
                 $service['hosts']['picture'] = Yii::$app->params['imageLink'] . '/' . $service['hosts']['picture'];
                 $service['hosts']['business_doc'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['hosts']['business_doc'];
+                $service['hosts']['created_at'] = $this->helperDate( $service['hosts']['created_at']);
                 $service['hosts']['hostReviews'] = Yii::$app->runAction('hoster/hostreviews', ['id' => $service['hosts']['host_id']]);
 
             }
@@ -234,6 +238,31 @@ class ServicesController extends BaseController
             throw new NotFoundHttpException("County not found");
         }
     }
+
+    private function helperDate($timestamp)
+    {
+        // Get the current date and time
+        $currentDate = new DateTime();
+
+        // Convert the timestamp to DateTime object
+        $registrationDate = new DateTime(Yii::$app->formatter->asDate($timestamp, 'php:Y-m-d H:i:s'));
+
+        // Calculate the difference
+        $interval = $currentDate->diff($registrationDate);
+
+        // Format the difference
+        if ($interval->y > 0) {
+            return $interval->y . ' year' . ($interval->y > 1 ? 's' : '') . ' of hosting';
+        } elseif ($interval->m > 0) {
+            return $interval->m . ' month' . ($interval->m > 1 ? 's' : '') . ' of hosting';
+        } else {
+            return $interval->d . ' day' . ($interval->d > 1 ? 's' : '') . ' of hosting';
+        }
+    }
+
+
+
+
 
 
 }

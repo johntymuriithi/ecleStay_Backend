@@ -24,4 +24,9 @@ class Orders extends ActiveRecord
         return $this->hasOne(Services::class, ['user_id' => 'id']);
     }
 
+    public function getServices()
+    {
+        return $this->hasOne(Services::class, ['service_id' => 'service_id']);
+    }
+
 }

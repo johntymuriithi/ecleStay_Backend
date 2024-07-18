@@ -58,6 +58,11 @@ class Services extends ActiveRecord
         return $this->hasMany(Amenities::class, ['service_id' => 'service_id']);
     }
 
+    public function getOrders()
+    {
+        return $this->hasMany(Orders::class, ['service_id' => 'service_id']);
+    }
+
 
     public function fields()
     {

@@ -62,12 +62,13 @@ class BaseController extends ActiveController
                     'allow' => true,
                     'actions' => ['showhosts', 'showcounties', 'addcounty', 'addtypes',
                         'addservice', 'getaccommodations', 'reviewhost', 'hostii', 'userguest',
-                        'rolerevoker', 'assignadmin', 'approvedhosts', 'waitinghosts', "userstotal", 'showguides', 'assignhost', 'assignguide', 'approvedguides', 'waitingguides'],
+                        'rolerevoker', 'assignadmin', 'approvedhosts', 'waitinghosts', "userstotal",
+                        'showguides', 'assignhost', 'assignguide', 'approvedguides', 'waitingguides', 'hostiorders', 'serviceorders'],
                     'roles' => ['admin'], // Require admin role
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['hostii', 'tester'],
+                    'actions' => ['hostii', 'tester', 'hostiorders', 'serviceorders'],
                     'roles' => ['host'], // Require user role
                 ],
             ],

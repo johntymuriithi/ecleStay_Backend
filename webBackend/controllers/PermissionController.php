@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\Guides;
 use app\models\Hosts;
 use app\models\User;
+use Cassandra\Date;
 use Yii;
 use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
@@ -41,7 +42,7 @@ class PermissionController extends BaseController
 
         // Update the 'approved' status using direct SQL
         $updateCommand = Yii::$app->db->createCommand()
-            ->update('hosts', ['approved' => true], ['email' => $email])
+            ->update('hosts', ['approved' => true, 'created_at' => date('Y-m-d H:i:s')], ['email' => $email])
             ->execute();
 
         if ($updateCommand) {

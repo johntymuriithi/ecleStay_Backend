@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Guides;
 use app\models\Hosts;
+use app\models\Orders;
 use app\models\Services;
 use app\models\User;
 use Yii;
@@ -68,6 +69,92 @@ class AnalysisController extends BaseController
                     "numberServices" => count($services),
                     'Services' => $services,
                 ];
+        } else {
+            throw new BadRequestHttpException("HOST has No added services yet");
+        }
+    }
+
+    public function actionHostiorders()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $host = Yii::$app->user->id;
+
+        $user = User::findOne(['id' => $host]);
+        if (!$user) {
+            throw new ForbiddenHttpException("Please Sign Up first to proceed with this Request");
+        }
+        $email = $user->email;
+        $userHost = Hosts::findOne(['email' => $email]);
+        $host_id = $userHost->host_id;
+
+//        var_dump(Services::findOne(['host_id' => $host_id]));exit;
+
+        if (Services::findOne(['host_id' => $host_id])) {
+            $services = Orders::find()
+//                ->with('images', 'orders')
+                ->where(['host_id' => $host_id])
+                ->asArray() // Convert the result to an array
+                ->all();
+
+//            $services = array($services); // wow,,I can do it yoh!!!!
+
+            // Check if the service was found
+
+
+            foreach ($services as &$service) {
+                $service['GuestDetails'] = $this->findUser($service['user_id']);
+            }
+            unset($service); // Break the reference with the last element
+
+            return [
+                'status' => 200,
+                'hostName' =>  $userHost->host_name,
+                "numberOrders" => count($services),
+                'Orders' => $services,
+            ];
+        } else {
+            throw new BadRequestHttpException("HOST has No added services yet");
+        }
+    }
+
+    public function actionServiceorders($serviceId)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $host = Yii::$app->user->id;
+
+        $user = User::findOne(['id' => $host]);
+        if (!$user) {
+            throw new ForbiddenHttpException("Please Sign Up first to proceed with this Request");
+        }
+        $email = $user->email;
+        $userHost = Hosts::findOne(['email' => $email]);
+        $host_id = $userHost->host_id;
+
+//        var_dump(Services::findOne(['host_id' => $host_id]));exit;
+
+        if (Services::findOne(['host_id' => $host_id])) {
+            $services = Orders::find()
+//                ->with('images', 'orders')
+                ->where(['service_id' => $serviceId])
+                ->asArray() // Convert the result to an array
+                ->all();
+
+//            $services = array($services); // wow,,I can do it yoh!!!!
+
+            // Check if the service was found
+
+
+            foreach ($services as &$service) {
+                $service['GuestDetails'] = $this->findUser($service['user_id']);
+            }
+            unset($service); // Break the reference with the last element
+
+            return [
+                'status' => 200,
+                'hostName' =>  $userHost->host_name,
+                "numberOrders" => count($services),
+                'Orders' => $services,
+            ];
         } else {
             throw new BadRequestHttpException("HOST has No added services yet");
         }
@@ -200,6 +287,22 @@ class AnalysisController extends BaseController
         // Get the authManager component
         $roles = Yii::$app->authManager->getRolesByUser($id);
         return array_keys($roles);
+    }
+
+    public function findUser($id)
+    {
+        $user = User::findOne(['id' => $id]);
+        $totalReviews = [];
+        if ($user) {
+            $reviewData = [
+                'userPic' => $user->profilePic ?? null,
+                'userName' => $user->first_name . ' ' . $user->second_name,
+                'userNumber' => $user->phone,
+                'userEmail' => $user->email,
+            ];
+        }
+
+        return $reviewData;
     }
 }
 
