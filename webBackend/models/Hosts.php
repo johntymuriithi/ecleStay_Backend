@@ -25,7 +25,7 @@ class Hosts extends ActiveRecord
             [['email'], 'string', 'max' => 100],
             [['about'], 'string', 'max' => 100],
             [['picture'], 'string', 'max' => 200],
-            [['number'], 'integer'],
+            [['number'], 'string', 'max' => 200],
             [['host_name'], 'string', 'max' => 200],
             [['approved'], 'boolean'],
             [['county_id'], 'integer'],

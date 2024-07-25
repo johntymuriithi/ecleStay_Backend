@@ -24,7 +24,7 @@ class GuidesController extends BaseController
         $guides= Guides::find()->all();
         if ($guides) {
             foreach ($guides as &$image) {
-                $image['picture'] = '/var/www/html/ecleStay_Backend/webBackend/' . $image['picture'];
+                $image['picture'] = Yii::$app->params['imageLink'] . '/'. $image['picture'];
                 $image['business_doc'] = '/var/www/html/ecleStay_Backend/webBackend/' . $image['business_doc']; // don't do in productions Jonhty
             }
             return $guides;

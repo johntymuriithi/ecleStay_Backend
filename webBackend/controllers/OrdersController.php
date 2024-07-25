@@ -83,6 +83,7 @@ class OrdersController extends BaseController
             ->select(['service_id'])
             ->from('orders')
             ->where(['user_id' => $id])
+            ->andwhere(['paid' => 'true'])
             ->column();
 
         if (!$userServices) {

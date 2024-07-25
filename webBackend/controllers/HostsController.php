@@ -47,7 +47,7 @@ class HostsController extends BaseController
 
         $user = User::findOne(['email' => $host->email]);
         if (!$user) {
-            throw new ForbiddenHttpException("Please Sign Up first with this email > $host->email < to Access this Action");
+            throw new ForbiddenHttpException("Please Sign Up first with this email > $host->name < to Access this Action");
         }
         $user = $host::findOne(['email' => $host->email]);
         if ($user) {

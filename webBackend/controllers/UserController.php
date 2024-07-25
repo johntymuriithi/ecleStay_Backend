@@ -56,62 +56,62 @@ class UserController extends BaseController
             throw new ConflictHttpException("User with the same Number Exists");
         }
 
-        // from here
-        if (UploadedFile::getInstanceByName('imageFile')) {
-            $user->imageFile = UploadedFile::getInstanceByName('imageFile');
-            if (Yii::$app->request->isPost && $user->validate()) {
-
-                $uploadsDir = Yii::getAlias('@app/uploads/users');
-                if (!is_dir($uploadsDir)) {
-                    if (!mkdir($uploadsDir, 0755, true)) {
-                        Yii::error("Failed to create directory: " . $uploadsDir);
-                        throw new \yii\web\ServerErrorHttpException("Failed to create directory: " . $uploadsDir);
-                    }
-                }
-                $uniqueFileName = uniqid() . '.' . $user->imageFile->extension;
-                $relativePath = 'uploads/users/' . $uniqueFileName;
-                $absolutePath = Yii::getAlias('@app/') . $relativePath;
-
-                if ($user->imageFile->saveAs($absolutePath)) {
-                   // outaaa here
-
-                    $availableUser = User::findOne(['email' => $params['email']]);
-                    $phone = User::findOne(['phone' => $params['phone']]);
-                    if (User::userImager($relativePath, Yii::$app->request->post())) {
-                        // here oooo
-                        $auth = Yii::$app->authManager;
-                        $userRole = $auth->getRole('user');
-                        $id = self::getSome($params['email']);
-                        $auth->assign($userRole, $id);
-
-                        Yii::$app->mailer->compose()
-                            ->setFrom('ecleStay-no-reply@gmail.com')
-                            ->setTo($user->email)
-                            ->setSubject('Welcome to ecleStay')
-                            ->setHtmlBody("<p>Welcome {$user->first_name} {$user->second_name}, to <h1>EcliStay</h1></p>
-<p>Please click below Button to activate your account</p>
-<a href='https://a145-41-90-101-26.ngrok-free.app/user/activateuser?token={$user->activationToken}'>Activate Account</a>")
-                            ->send();
-                        return ['status' => 200, 'message' => 'User Sign up was Successful'];
-                    } elseif ($availableUser != null) {
-                        throw new ConflictHttpException("User with the same Email Exists");
-                    }elseif ($phone != null) {
-                        throw new ConflictHttpException("User with the same Number Exists");
-                    } else {
-                        return ['status' => false, 'errors' => $user->errors];
-                    }
-
-                    // to here also
-                } else {
-                    Yii::error("Failed to save the file to: " . $absolutePath);
-                    throw new \yii\web\ServerErrorHttpException("Failed to save the file to: " . $absolutePath);
-                }
-            } else {
-                // Output validation errors
-                Yii::error("Validation failed: " . json_encode($user->getErrors()));
-                return "Validation failed: " . json_encode($user->getErrors());
-            }
-        }
+        // from here incase of profile pic// but am not gonna use this for varius reasons
+//        if (UploadedFile::getInstanceByName('imageFile')) {
+//            $user->imageFile = UploadedFile::getInstanceByName('imageFile');
+//            if (Yii::$app->request->isPost && $user->validate()) {
+//
+//                $uploadsDir = Yii::getAlias('@app/uploads/users');
+//                if (!is_dir($uploadsDir)) {
+//                    if (!mkdir($uploadsDir, 0755, true)) {
+//                        Yii::error("Failed to create directory: " . $uploadsDir);
+//                        throw new \yii\web\ServerErrorHttpException("Failed to create directory: " . $uploadsDir);
+//                    }
+//                }
+//                $uniqueFileName = uniqid() . '.' . $user->imageFile->extension;
+//                $relativePath = 'uploads/users/' . $uniqueFileName;
+//                $absolutePath = Yii::getAlias('@app/') . $relativePath;
+//
+//                if ($user->imageFile->saveAs($absolutePath)) {
+//                   // outaaa here
+//
+//                    $availableUser = User::findOne(['email' => $params['email']]);
+//                    $phone = User::findOne(['phone' => $params['phone']]);
+//                    if (User::userImager($relativePath, Yii::$app->request->post())) {
+//                        // here oooo
+//                        $auth = Yii::$app->authManager;
+//                        $userRole = $auth->getRole('user');
+//                        $id = self::getSome($params['email']);
+//                        $auth->assign($userRole, $id);
+//
+//                        Yii::$app->mailer->compose()
+//                            ->setFrom('ecleStay-no-reply@gmail.com')
+//                            ->setTo($user->email)
+//                            ->setSubject('Welcome to ecleStay')
+//                            ->setHtmlBody("<p>Welcome {$user->first_name} {$user->second_name}, to <h1>EcliStay</h1></p>
+//<p>Please click below Button to activate your account</p>
+//<a href='https://a145-41-90-101-26.ngrok-free.app/user/activateuser?token={$user->activationToken}'>Activate Account</a>")
+//                            ->send();
+//                        return ['status' => 200, 'message' => 'User Sign up was Successful'];
+//                    } elseif ($availableUser != null) {
+//                        throw new ConflictHttpException("User with the same Email Exists");
+//                    }elseif ($phone != null) {
+//                        throw new ConflictHttpException("User with the same Number Exists");
+//                    } else {
+//                        return ['status' => false, 'errors' => $user->errors];
+//                    }
+//
+//                    // to here also
+//                } else {
+//                    Yii::error("Failed to save the file to: " . $absolutePath);
+//                    throw new \yii\web\ServerErrorHttpException("Failed to save the file to: " . $absolutePath);
+//                }
+//            } else {
+//                // Output validation errors
+//                Yii::error("Validation failed: " . json_encode($user->getErrors()));
+//                return "Validation failed: " . json_encode($user->getErrors());
+//            }
+//        }
 
         // to here
 
@@ -176,7 +176,12 @@ class UserController extends BaseController
                         $user->login_trials = 0;
                         $user->save();
 
-                        return ['status' => 200, 'data' => ['token' => $tokenJWTs], 'Message' => 'Logged in Successfully'];
+                        if ($user->profilePic) {
+                            $pic = Yii::$app->params['imageLink'] . '/'. $user->profilePic;
+                        } else {
+                            $pic = null;
+                        }
+                        return ['status' => 200, 'data' => ['token' => $tokenJWTs, 'profiles' => ['profilePicture' => $pic]], 'Message' => 'Logged in Successfully'];
                     } else {
                         $trials = $user->login_trials;
                         $user->login_trials = $trials + 1;
@@ -329,11 +334,59 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
         return ["status" => 200, "message" => "Users retrived succcesifully", "totalUsers" => count($total), "users" => $total];
     }
 
+    // want to update the profile picture here
+    public function actionUpdateprofilepic() {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $params = Yii::$app->request->bodyParams;
+        $userId = Yii::$app->user->id;
+
+        $user = new User();
+
+        if (UploadedFile::getInstanceByName('imageFile')) {
+            $user->imageFile = UploadedFile::getInstanceByName('imageFile');
+            if (1) {
+
+                $uploadsDir = Yii::getAlias('@app/uploads/users');
+                if (!is_dir($uploadsDir)) {
+                    if (!mkdir($uploadsDir, 0755, true)) {
+                        Yii::error("Failed to create directory: " . $uploadsDir);
+                        throw new \yii\web\ServerErrorHttpException("Failed to create directory: " . $uploadsDir);
+                    }
+                }
+                $uniqueFileName = uniqid() . '.' . $user->imageFile->extension;
+                $relativePath = 'uploads/users/' . $uniqueFileName;
+                $absolutePath = Yii::getAlias('@app/') . $relativePath;
+
+                if ($user->imageFile->saveAs($absolutePath)) {
+                    $updateCommand = Yii::$app->db->createCommand()
+                        ->update('user', ['profilePic' => $relativePath], ['id' => $userId])
+                        ->execute();
+
+                    if ($updateCommand) {
+                        return ['status' => 200, 'message' => 'Updated profile picture successful'];
+                    } else {
+                        throw new BadRequestHttpException("Failed to update profile pic,,please try again");
+                    }
+                } else {
+                    Yii::error("Failed to save the file to: " . $absolutePath);
+                    throw new \yii\web\ServerErrorHttpException("Failed to save the file to: " . $absolutePath);
+                }
+            } else {
+                // Output validation errors
+                Yii::error("Validation of Profile Picture failed: " . json_encode($user->getErrors()));
+                return "Validation of Profile Picture Failed failed: " . json_encode($user->getErrors());
+            }
+        }
+
+    }
+
     public function helper ($id) {
         // Get the authManager component
         $roles = Yii::$app->authManager->getRolesByUser($id);
         return array_keys($roles);
     }
+
+
 
 }
 ?>

@@ -14,7 +14,7 @@ class Orders extends ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'service_id', 'amount', 'guests_number', 'begin_date', 'end_date', 'billing_address', 'city', 'state', 'zip_code'], 'required'],
+            [['user_id', 'service_id', 'amount', 'guests_number', 'host_id', 'begin_date', 'end_date', 'billing_address', 'city', 'state', 'zip_code'], 'required'],
             // please valid rules later and don't fail to do so
         ];
     }

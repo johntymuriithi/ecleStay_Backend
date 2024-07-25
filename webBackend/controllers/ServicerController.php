@@ -78,12 +78,18 @@ class ServicerController extends BaseController {
             $user = User::findOne(['id' => $review->user_id]);
 
             if ($user) {
+                if ($user->profilePic) {
+                    $pic = Yii::$app->params['imageLink'] . '/'. $user->profilePic;
+                } else {
+                    $pic = null;
+                }
                 $reviewData = [
                     'review_id' => $review->servicer_id,
                     'review_date' => $this->helperDate($review->review_date),
                     'content' => $review->description,
                     'rating' => $review->rating,
-                    'userPic' => $user->profilePic ?? null,
+                    'userPic' => $pic ?? null,
+                    'userEmail' => $user->email,
                     'userName' => $user->first_name . ' ' . $user->second_name,
                     'daysStayed' => $review->days_stayed,
                     'user_registerDate' => $this->helperDate($user->created_at),

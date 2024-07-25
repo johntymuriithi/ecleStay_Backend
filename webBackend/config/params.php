@@ -5,5 +5,5 @@ return [
     'senderEmail' => 'noreply@example.com',
     'senderName' => 'Example.com mailer',
     'jwtSecretKey' => 'ecleStay',
-    'imageLink' => 'https://f9e5-197-155-66-222.ngrok-free.app'
+    'imageLink' => 'https://203e-41-80-113-0.ngrok-free.app'
 ];

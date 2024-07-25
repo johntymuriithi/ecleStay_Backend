@@ -37,7 +37,7 @@ class BaseController extends ActiveController
         //        // JWT Authentication (placed after access control) // incase it fails,,please login 401
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::class,
-            'except' => ['login', 'signup', 'viewservice', 'showcategories', 'addcategory', 'servicereviews',
+            'except' => ['login', 'signup', 'viewservice', 'showcategories', 'addcategory', 'servicereviews', 'showguides',
                 'getaccommodations', 'searchtype', 'showtypes', 'addhosts', 'hostreviews', 'addguides', 'guidebycounty',
                 'showcounties', 'getservices', 'resetpasswordlink', 'resetpassword', 'hostreviews', 'addcounty', 'searchcounty'], // Actions that don't require authentication
         ];
@@ -48,14 +48,14 @@ class BaseController extends ActiveController
                     'allow' => true,
                     'actions' => ['login', 'signup', 'getservices', 'viewservice',
                         'showcategories', 'addcategory', 'getaccommodations', 'searchtype',
-                        'showtypes', 'addhosts', 'addguides', 'showcounties', 'resetpasswordlink',
+                        'showtypes', 'addhosts', 'addguides', 'showcounties', 'resetpasswordlink', 'showguides',
                         'resetpassword', 'hostreviews', 'addcounty', 'servicereviews', 'searchcounty', 'guidebycounty'],
                     'roles' => ['?'], // Allow guests (unauthenticated users) // in short in mean users
                 ],
                 [
                     'allow' => true,
                     'actions' => ['showtypes', 'ordernow', 'addhosts', 'addguides', 'toa', 'showcategories', 'reviewhost',
-                        'addservice', 'hostrevews', 'reviewservice', 'showorders', 'servicereviews', 'hostreviews', 'guestservices'],
+                        'addservice', 'hostrevews', 'reviewservice', 'showorders', 'servicereviews', 'hostreviews', 'guestservices', 'updateprofilepic'],
                     'roles' => ['@'], // authenticated users only // passed the bearer auth
                 ],
                 [

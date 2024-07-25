@@ -88,6 +88,8 @@ $config = [
                 'POST user/signup' => 'user/signup',
                 'POST user/login' => 'user/login',
                 'GET users/total' => 'user/userstotal',
+                'POST users/update/profilepic' => 'user/updateprofilepic',
+
                 'GET counties' => 'county/showcounties',
                 'POST add/county' => 'county/addcounty',
                 'GET types' => 'types/showtypes',
