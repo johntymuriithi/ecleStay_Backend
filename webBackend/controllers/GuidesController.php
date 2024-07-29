@@ -25,6 +25,7 @@ class GuidesController extends BaseController
         if ($guides) {
             foreach ($guides as &$image) {
                 $image['picture'] = Yii::$app->params['imageLink'] . '/'. $image['picture'];
+                $image['county_id'] = $this->helperCounty($image['county_id']);
                 $image['business_doc'] = '/var/www/html/ecleStay_Backend/webBackend/' . $image['business_doc']; // don't do in productions Jonhty
             }
             return $guides;
@@ -102,6 +103,12 @@ class GuidesController extends BaseController
             Yii::error("Validation failed: " . json_encode($guide->getErrors()));
             return "Validation failed: " . json_encode($guide->getErrors());
         }
+    }
+
+
+    public function helperCounty($id) {
+        $record = County::findOne(['county_id' => $id]);
+        return $record->county_name;
     }
 
 }

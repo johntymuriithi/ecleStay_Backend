@@ -141,7 +141,7 @@ class UserController extends BaseController
                 ->setSubject('Welcome to ecleStay')
                 ->setHtmlBody("<p>Welcome {$user->first_name} {$user->second_name}, to <h1>EcliStay</h1></p>
 <p>Please click below Button to activate your account</p>
-<a href='http://localhost:8080/user/activateuser?token={$user->activationToken}'>Activate Account</a>")
+<a href='https://d6a6-41-80-114-128.ngrok-free.app/user/activateuser?token={$user->activationToken}'>Activate Account</a>")
                 ->send();
             return ['status' => 200, 'message' => 'User Sign up was Successful'];
         } elseif ($availableUser != null) {
@@ -298,8 +298,8 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
             $user->activationToken = null; // Clear the token after activation
             if ($user->save()) {
                 // Redirect to frontend login page
-                return "Activated successfully, Waiting for frontend guys now";
-//                return $this->redirect('https://fe59-41-90-101-26.ngrok-free.app');
+//                return "Activated successfully, Waiting for frontend guys now";
+                return $this->redirect('https://2d0e-41-90-101-26.ngrok-free.app');
             } else {
                 throw new BadRequestHttpException("Activation Failed");
             }
@@ -385,8 +385,5 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
         $roles = Yii::$app->authManager->getRolesByUser($id);
         return array_keys($roles);
     }
-
-
-
 }
 ?>

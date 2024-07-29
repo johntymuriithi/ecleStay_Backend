@@ -109,7 +109,9 @@ class ServicesController extends BaseController
             ->all();
 
         foreach ($services as &$service) {
+
             if (isset($service['images']) && is_array($service['images'])) {
+                $service['county_id'] = $this->helperCounty($service['county_id']);
                 foreach ($service['images'] as &$image) {
 //                    $image['service_image'] = '/var/www/html/ecleStay_Backend/webBackend/' . $image['service_image'];
                     $baseUrl = Yii::$app->request->hostInfo . Yii::$app->request->baseUrl;
@@ -121,11 +123,13 @@ class ServicesController extends BaseController
                 $service['hosts']['business_doc'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['hosts']['business_doc'];
                 $service['hosts']['created_at'] = $this->helperDate( $service['hosts']['created_at']);
                 $service['hosts']['hostReviews'] = Yii::$app->runAction('hoster/hostreviews', ['id' => $service['hosts']['host_id']]);
+                $service['hosts']['county_id'] = $this->helperCounty($service['hosts']['county_id']);
 
 
             }
             if (isset($service['county']) && is_array($service['county'])) {
                 $service['county']['county_url'] = Yii::$app->params['imageLink'] . '/' . $service['county']['county_url'];
+//                $service['county']['county_id'] = $this->helperCounty($service['county']['county_id']);
             }
 
             $service['serviceReviews'] = Yii::$app->runAction('servicer/servicereviews', ['id' => $service['service_id']]);
@@ -159,6 +163,7 @@ class ServicesController extends BaseController
         // Check if the service was found
 
         foreach ($services as &$service) {
+            $service['county_id'] = $this->helperCounty($service['county_id']);
             if (isset($service['images']) && is_array($service['images'])) {
                 foreach ($service['images'] as &$image) {
 //                   $image['service_image'] = '/var/www/html/ecleStay_Backend/webBackend/' . $image['service_image'];
@@ -170,10 +175,12 @@ class ServicesController extends BaseController
                 $service['hosts']['business_doc'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['hosts']['business_doc'];
                 $service['hosts']['created_at'] = $this->helperDate( $service['hosts']['created_at']);
                 $service['hosts']['hostReviews'] = Yii::$app->runAction('hoster/hostreviews', ['id' => $service['hosts']['host_id']]);
+                $service['hosts']['county_id'] = $this->helperCounty($service['hosts']['county_id']);
 
             }
             if (isset($service['county']) && is_array($service['county'])) {
                 $service['county']['county_url'] = Yii::$app->params['imageLink'] . '/' . $service['county']['county_url'];
+//                $service['county']['county_id'] = $this->helperCounty($service['county']['county_id']);
             }
 
             $service['serviceReviews'] = Yii::$app->runAction('servicer/servicereviews', ['id' => $service['service_id']]);
@@ -208,6 +215,7 @@ class ServicesController extends BaseController
         // Check if the service was found
 
         foreach ($services as &$service) {
+            $service['county_id'] = $this->helperCounty($service['county_id']);
             if (isset($service['images']) && is_array($service['images'])) {
                 foreach ($service['images'] as &$image) {
 //                   $image['service_image'] = '/var/www/html/ecleStay_Backend/webBackend/' . $image['service_image'];
@@ -218,10 +226,12 @@ class ServicesController extends BaseController
                 $service['hosts']['picture'] = Yii::$app->params['imageLink'] . '/' . $service['hosts']['picture'];
                 $service['hosts']['business_doc'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['hosts']['business_doc'];
                 $service['hosts']['hostReviews'] = Yii::$app->runAction('hoster/hostreviews', ['id' => $service['hosts']['host_id']]);
+                $service['hosts']['county_id'] = $this->helperCounty($service['hosts']['county_id']);
 
             }
             if (isset($service['county']) && is_array($service['county'])) {
                 $service['county']['county_url'] = Yii::$app->params['imageLink'] . '/' . $service['county']['county_url'];
+//                $service['county']['county_id'] = $this->helperCounty($service['county']['county_id']);
             }
 
             $service['serviceReviews'] = Yii::$app->runAction('servicer/servicereviews', ['id' => $service['service_id']]);
@@ -258,6 +268,11 @@ class ServicesController extends BaseController
         } else {
             return $interval->d . ' day' . ($interval->d > 1 ? 's' : '') . ' of hosting';
         }
+    }
+
+    public function helperCounty($id) {
+        $record = County::findOne(['county_id' => $id]);
+        return $record->county_name;
     }
 
 

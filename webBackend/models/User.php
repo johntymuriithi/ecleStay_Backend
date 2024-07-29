@@ -31,7 +31,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             [['first_name', 'second_name', 'email', 'phone'], 'required'],
-            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxFiles' => 1, 'message' => 'Please upload a profile picture.'],
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, webp', 'maxFiles' => 1, 'message' => 'Please upload a profile picture.'],
             [['email'], 'email'],
             [['email'], 'unique'],
             [['auth_key'], 'string', 'max' => 32],

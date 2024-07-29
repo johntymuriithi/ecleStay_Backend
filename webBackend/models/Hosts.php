@@ -17,7 +17,7 @@ class Hosts extends ActiveRecord
     public function rules()
     {
         return [
-            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg', 'maxFiles' => 1, 'message' => 'Please upload a picture.'],
+            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, webp', 'maxFiles' => 1, 'message' => 'Please upload a picture.'],
             // bst docs
             [['businessFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'pdf, docx', 'maxFiles' => 1, 'message' => 'Please upload a file.'],
             [['language', 'email', 'about', 'number', 'host_name', 'county_id', 'imageFile', 'business_name', 'businessFile'], 'required'],

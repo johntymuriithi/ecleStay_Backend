@@ -14,7 +14,7 @@ $config = [
     'components' => [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
-            'defaultRoles' => ['guest'],
+            'defaultRoles' => ['guest'], // MY DEFAULT
         ],
          // only this
 //        'corsFilter' => [
@@ -119,6 +119,7 @@ $config = [
 
                 'GET get/orders' => 'orders/showorders',
                 'POST place/order' => 'orders/ordernow',
+                'GET pay' => 'orders/paid',
                 'GET get/active/users/guest' => 'orders/userguest',
                 'GET get/guest/bookings' => 'orders/guestservices',
 
@@ -143,6 +144,9 @@ $config = [
                 'GET analysis/guides/waiting' => 'analysis/waitingguides',
                 'GET analysis/host/orders' => 'analysis/hostiorders',
                 'GET analysis/service/orders' => 'analysis/serviceorders',
+
+                'GET payment/makepayment' => 'payment/makepayment',
+                'GET payment/callback' => 'payment/callbackurl',
 
                 'GET tester' => 'analysis/tester',
 

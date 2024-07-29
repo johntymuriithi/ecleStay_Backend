@@ -1,6 +1,7 @@
 <?php
 namespace app\controllers;
 
+use app\models\County;
 use app\models\Orders;
 use app\models\Services;
 use app\models\User;
@@ -33,9 +34,25 @@ class OrdersController extends BaseController
         \Yii::$app->response->format = Response::FORMAT_JSON;
         $params = \Yii::$app->request->bodyParams;
 
+        $amount = $params['amount'];
+        $number = $params['number'];
+
         $orders = new Orders();
         $orders->user_id = $id;
 
+//        return [$orders->load($params, ''), $orders->save(), $orders->getErrors()];exit;
+        if (Yii::$app->runAction('payment/makepayment', ['number' => $number, 'amount' => $amount])) {
+            $orders->paid = 'true';
+            if ($orders->load($params, '') && $orders->save()) {
+//                $guestOrder = Orders::find()->where(['user_id' => $id])
+//                    ->andWhere(['paid' => 'false']);
+//                $guestOrder->paid = 'true';
+//                $guestOrder->save();
+                return ["status" => 200 . " " . 'OK', 'message' => "Order placed Successfully"];
+            } else {
+                throw new BadRequestHttpException("Order placement Failed");
+            }
+        }
         if ($orders->load($params, '') && $orders->save()) {
             return ["status" => 200 . " " . 'OK', 'message' => "Order placed Successfully"];
         } else {
@@ -117,6 +134,7 @@ class OrdersController extends BaseController
 
         $services = $totalServices;
         foreach ($services as &$service) {
+            $service['county_id'] = $this->helperCounty($service['county_id']);
             if (isset($service['images']) && is_array($service['images'])) {
                 foreach ($service['images'] as &$image) {
 //                   $image['service_image'] = '/var/www/html/ecleStay_Backend/webBackend/' . $image['service_image'];
@@ -127,6 +145,7 @@ class OrdersController extends BaseController
                 $service['hosts']['picture'] = Yii::$app->params['imageLink'] . '/' . $service['hosts']['picture'];
                 $service['hosts']['business_doc'] = '/var/www/html/ecleStay_Backend/webBackend/' . $service['hosts']['business_doc'];
                 $service['hosts']['hostReviews'] = Yii::$app->runAction('hoster/hostreviews', ['id' => $service['hosts']['host_id']]);
+                $service['hosts']['county_id'] = $this->helperCounty($service['hosts']['county_id']);
 
             }
             if (isset($service['county']) && is_array($service['county'])) {
@@ -141,6 +160,23 @@ class OrdersController extends BaseController
                 'message' => 'Your Bookings Retrived Successfully',
                 'data' => ['Bookings' => $services],
             ];
+    }
+
+    public function helperCounty($id) {
+        $record = County::findOne(['county_id' => $id]);
+        return $record->county_name;
+    }
+
+    public function actionPaid($id)
+    {
+        $guest  = Orders::findOne(['order_id' => $id]);
+        $guest->paid  = true;
+
+        if ($guest->save()) {
+            return ['status' => 200, 'message' => 'Paid Succesifully'];
+        } else {
+            throw new BadRequestHttpException("Payment Fialed");
+    }
     }
 
 }

@@ -38,7 +38,7 @@ class BaseController extends ActiveController
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::class,
             'except' => ['login', 'signup', 'viewservice', 'showcategories', 'addcategory', 'servicereviews', 'showguides',
-                'getaccommodations', 'searchtype', 'showtypes', 'addhosts', 'hostreviews', 'addguides', 'guidebycounty',
+                'getaccommodations', 'searchtype', 'showtypes', 'addhosts', 'hostreviews', 'addguides', 'guidebycounty', 'callbackurl',
                 'showcounties', 'getservices', 'resetpasswordlink', 'resetpassword', 'hostreviews', 'addcounty', 'searchcounty'], // Actions that don't require authentication
         ];
         $behaviors['access'] = [
@@ -46,7 +46,7 @@ class BaseController extends ActiveController
             'rules' => [
                 [
                     'allow' => true,
-                    'actions' => ['login', 'signup', 'getservices', 'viewservice',
+                    'actions' => ['login', 'signup', 'getservices', 'viewservice', 'callbackurl',
                         'showcategories', 'addcategory', 'getaccommodations', 'searchtype',
                         'showtypes', 'addhosts', 'addguides', 'showcounties', 'resetpasswordlink', 'showguides',
                         'resetpassword', 'hostreviews', 'addcounty', 'servicereviews', 'searchcounty', 'guidebycounty'],
@@ -54,7 +54,7 @@ class BaseController extends ActiveController
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['showtypes', 'ordernow', 'addhosts', 'addguides', 'toa', 'showcategories', 'reviewhost',
+                    'actions' => ['showtypes', 'ordernow', 'addhosts', 'addguides', 'toa', 'showcategories', 'reviewhost', 'makepayment',
                         'addservice', 'hostrevews', 'reviewservice', 'showorders', 'servicereviews', 'hostreviews', 'guestservices', 'updateprofilepic'],
                     'roles' => ['@'], // authenticated users only // passed the bearer auth
                 ],
@@ -63,7 +63,7 @@ class BaseController extends ActiveController
                     'actions' => ['showhosts', 'showcounties', 'addcounty', 'addtypes',
                         'addservice', 'getaccommodations', 'reviewhost', 'hostii', 'userguest',
                         'rolerevoker', 'assignadmin', 'approvedhosts', 'waitinghosts', "userstotal",
-                        'showguides', 'assignhost', 'assignguide', 'approvedguides', 'waitingguides', 'hostiorders', 'serviceorders'],
+                        'showguides', 'assignhost', 'assignguide', 'approvedguides', 'waitingguides', 'hostiorders', 'serviceorders', 'paid'],
                     'roles' => ['admin'], // Require admin role
                 ],
                 [

@@ -3,6 +3,7 @@ namespace app\controllers;
 
 use app\models\Categories;
 
+use app\models\County;
 use app\models\Hosts;
 use app\models\Services;
 use app\models\Types;
@@ -65,6 +66,7 @@ class CategoriesController extends BaseController
             ->all();
         if ($services) {
             foreach ($services as &$service) {
+                $service['county_id'] = $this->helperCounty($service['county_id']);
                 if (isset($service['images']) && is_array($service['images'])) {
                     $test = $service['images'];
                     foreach ($test as &$image) {
@@ -75,6 +77,7 @@ class CategoriesController extends BaseController
                     // Ensure the base URL is prepended only once for picture
                     if (strpos($service['hosts']['picture'], Yii::$app->params['imageLink']) === false) {
                         $service['hosts']['picture'] = Yii::$app->params['imageLink'] . '/' . $service['hosts']['picture'];
+                        $service['hosts']['county_id'] = $this->helperCounty($service['hosts']['county_id']);
                     }
 
                     $service['hosts']['business_doc'] = [];
@@ -141,6 +144,11 @@ class CategoriesController extends BaseController
         } else {
             throw new NotFoundHttpException("Data does not exists,,search another thing");
         }
+    }
+
+    public function helperCounty($id) {
+        $record = County::findOne(['county_id' => $id]);
+        return $record->county_name;
     }
 }
 

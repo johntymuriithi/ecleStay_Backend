@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\County;
 use app\models\Guides;
 use app\models\Hosts;
 use app\models\Orders;
@@ -218,6 +219,7 @@ class AnalysisController extends BaseController
         foreach ($guides as $guide) {
             $gudi = [
                 "guide_id" => $guide->guide_id,
+                'county_id' => $this->helperCounty($guide->county_id),
                 "about" => $guide->about,
                 "guide_name" => $guide->guide_name,
                 "language" => $guide->language,
@@ -229,7 +231,7 @@ class AnalysisController extends BaseController
             $totalGuides = $gudi;
         }
 
-        return ["status" => 200, "message" => "Guides retrived succcesifully", "Guides" => $totalGuides];
+        return [$totalGuides];
 
 
 
@@ -303,6 +305,11 @@ class AnalysisController extends BaseController
         }
 
         return $reviewData;
+    }
+
+    public function helperCounty($id) {
+        $record = County::findOne(['county_id' => $id]);
+        return $record->county_name;
     }
 }
 
