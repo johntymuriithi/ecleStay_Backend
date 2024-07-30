@@ -21,23 +21,10 @@ class BaseController extends ActiveController
                 'application/json' => Response::FORMAT_JSON,
             ],
         ];
-
-//        $behaviors['corsFilter'] = [
-//            'class' => Cors::class,
-//            'cors' => [
-//                'Origin' => ['*'], // Replace * with your specific origins
-//                'Access-Control-Request-Method' => ['POST', 'GET', 'OPTIONS', 'DELETE', 'PUT'],
-//                'Access-Control-Allow-Credentials' => true,
-//                'Access-Control-Max-Age' => 3600,
-//                'Access-Control-Allow-Headers' => ['Content-Type', 'Authorization'],
-//            ],
-//        ];
-
-
         //        // JWT Authentication (placed after access control) // incase it fails,,please login 401
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::class,
-            'except' => ['login', 'signup', 'viewservice', 'showcategories', 'addcategory', 'servicereviews', 'showguides',
+            'except' => ['login', 'signup', 'viewservice', 'showcategories', 'addcategory', 'servicereviews', 'showguides', 'activateuser',
                 'getaccommodations', 'searchtype', 'showtypes', 'addhosts', 'hostreviews', 'addguides', 'guidebycounty', 'callbackurl',
                 'showcounties', 'getservices', 'resetpasswordlink', 'resetpassword', 'hostreviews', 'addcounty', 'searchcounty'], // Actions that don't require authentication
         ];
@@ -47,7 +34,7 @@ class BaseController extends ActiveController
                 [
                     'allow' => true,
                     'actions' => ['login', 'signup', 'getservices', 'viewservice', 'callbackurl',
-                        'showcategories', 'addcategory', 'getaccommodations', 'searchtype',
+                        'showcategories', 'addcategory', 'getaccommodations', 'searchtype', 'activateuser',
                         'showtypes', 'addhosts', 'addguides', 'showcounties', 'resetpasswordlink', 'showguides',
                         'resetpassword', 'hostreviews', 'addcounty', 'servicereviews', 'searchcounty', 'guidebycounty'],
                     'roles' => ['?'], // Allow guests (unauthenticated users) // in short in mean users

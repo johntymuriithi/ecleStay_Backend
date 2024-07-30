@@ -219,7 +219,7 @@ class UserController extends BaseController
             $expireDate = time() + 12000000;
             if (PasswordResetToken::createToken($userId, $token, $expireDate)) {
                 // Send the token to the user via email
-                $resetLink = Yii::$app->urlManager->createAbsoluteUrl(['resetpasswordlink', 'token' => $token]);
+                $resetLink = Yii::$app->urlManager->createAbsoluteUrl(['reset', 'token' => $token]);
                 Yii::$app->mailer->compose()
                     ->setFrom('ecleStay-password-reset@gmail.com')
                     ->setTo($user->email)
@@ -284,6 +284,7 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
     public function actionToa()
     {
         $users = County::find()->all();
+
         foreach ($users as $user) {
             $user->delete();
         }
@@ -385,5 +386,6 @@ Click link below change your password <h1>Reset Link:</h1><i><a href='{$resetLin
         $roles = Yii::$app->authManager->getRolesByUser($id);
         return array_keys($roles);
     }
+
 }
 ?>
